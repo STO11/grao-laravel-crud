@@ -1,4 +1,6 @@
 
+//import * as html from '../extensions/html-generate'
+
 module.exports = {
   name: 'generate',
   alias: ['g'],
@@ -8,30 +10,28 @@ module.exports = {
       parameters,
       template: { generate },
       print: { info, error, success },
-      strings
+      strings,
     } = toolbox
 
-
-    const toCamel = (s) => {
-      return s.replace(/([-_][a-z])/ig, ($1) => {
-        return $1.toUpperCase()
-          .replace('-', '')
-          .replace('_', '');
-      });
-    };
-
     const checkPlural = (s) => {
-      if(s.charAt(s.length - 1) == 's')
-        s = s.slice(0, -1) 
+      if(strings.pluralize.isPlural(s))
+        //s = s.slice(0, -1) 
+        s = strings.singular(s)
         return s
     };
 
+    const delay = () => {
+      return new Promise(resolve => setTimeout(resolve, 300));
+    }
+
     const fs = require('fs');
     const mysql  = require('mysql');
-    const name = toCamel(checkPlural(parameters.first));
-    const nameCapitalize = toCamel(checkPlural(name.charAt(0).toUpperCase() + name.slice(1)));
+    const name = strings.camelCase(checkPlural(parameters.first)).toLowerCase();
+    const nameCapitalize = checkPlural(strings.upperFirst(name)); //name.charAt(0).toUpperCase() + strings.camelCase(name.slice(1))
     const table = parameters.first;
+    let resultsQuery = [];
     let config = new Map();
+    
 
     //====================================================================================================
     //==================================== FILE .ENV CONFIG MYSQL ===========================================
@@ -95,7 +95,7 @@ module.exports = {
       
       connection.connect();
       //TEST CONNECTION
-      connection.query('DESCRIBE '+table, function (errors, results, fields) {
+      await connection.query('DESCRIBE '+table, async function (errors, results, fields) {
         //if (errors) throw console.error(errors);
         if (errors) 
         { 
@@ -103,8 +103,17 @@ module.exports = {
           return false;
         }
         success(`Successful Mysql Connection DESCRIBE `+table);
+        //console.log(results);
+        if(results.length)
+        {
+          await results.forEach(async (item,i) => 
+          { 
+            //console.log(item)
+            resultsQuery[strings.trim(i)] = item;
+          });
+        }
       });
-      
+      await delay();
       connection.end();
     }catch(e)
     {
@@ -116,6 +125,12 @@ module.exports = {
     //====================================================================================================
     //====================================================================================================
 
+
+    //console.log(JSON.stringify(resultsQuery[0]));
+
+    //====================================================================================================
+    //==================================== GENERATE HTML =================================================
+    //====================================================================================================
 
     await generate({
       template: 'model.js.ejs',
@@ -136,7 +151,7 @@ module.exports = {
     await generate({
       template: 'index.js.ejs',
       target: `resources/views/controle/${name}/index.blade.php`,
-      props: { nameCapitalize, name }
+      props: { nameCapitalize, name, resultsQuery }
     });
 
     info(`Generated file resources/views/controle/${name}/index.blade.php`);
@@ -144,9 +159,15 @@ module.exports = {
     await generate({
       template: 'form.js.ejs',
       target: `resources/views/controle/${name}/form.blade.php`,
-      props: { nameCapitalize, name }
+      props: { nameCapitalize, name, resultsQuery },
+      rmWhitespace:true,
     });
 
-    info(`Generated file resources/views/controle/${name}/form.blade.php`)
+    info(`Generated file resources/views/controle/${name}/form.blade.php`);
+
+    //====================================================================================================
+    //====================================================================================================
+    //====================================================================================================
   }
 }
+

@@ -4,37 +4,37 @@ namespace App\Http\Controllers\Controle;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\<%= props.nameCapitalize %>;
+use App\Models\Apiatendimento;
 
-class <%= props.nameCapitalize %>Controller extends Controller
+class ApiatendimentoController extends Controller
 {
     public function index()
     {	
-    	$data = ['<%= props.name %>s'];
-    	$<%= props.name %>s = Banner::orderBy('id', 'desc')->get();
-    	return view('controle.<%= props.name %>s.index', compact($data));
+    	$data = ['apiatendimentos'];
+    	$apiatendimentos = Banner::orderBy('id', 'desc')->get();
+    	return view('controle.apiatendimentos.index', compact($data));
     }
 
     public function form($id = null)
     {
-    	$data = ['<%= props.name %>', 'id'];
-    	$<%= props.name %> = <%= props.nameCapitalize %>::find($id);
-    	return view('controle.<%= props.name %>s.form', compact($data));
+    	$data = ['apiatendimento', 'id'];
+    	$apiatendimento = Apiatendimento::find($id);
+    	return view('controle.apiatendimentos.form', compact($data));
     }
 
     public function cadastrar(Request $request)
     {
     	$input = $request->except('_token');
-        $<%= props.name %> = <%= props.nameCapitalize %>::create($input);
-        if ($<%= props.name %>) 
+        $apiatendimento = Apiatendimento::create($input);
+        if ($apiatendimento) 
         {
            return redirect()
-                ->route('controle.<%= props.name %>s.index')
+                ->route('controle.apiatendimentos.index')
     			->with('msg', 'Cadastrado com sucesso.')
     			->with('error', false);
     	}
         return redirect()
-            ->route('controle.<%= props.name %>.form')
+            ->route('controle.apiatendimento.form')
     		->with('msg', 'Falha na operação.')
             ->with('error', true)
             ->withInput();
@@ -43,40 +43,40 @@ class <%= props.nameCapitalize %>Controller extends Controller
     public function alterar(Request $request, $id)
     {
     	$input = $request->except('_token', 'imagem');
-        $<%= props.name %> = <%= props.nameCapitalize %>::find($id);
-        if ($<%= props.name %>) 
+        $apiatendimento = Apiatendimento::find($id);
+        if ($apiatendimento) 
         {
-            if($<%= props.name %>->update($input))
+            if($apiatendimento->update($input))
             {
                 return redirect()
-                ->route('controle.<%= props.name %>s.index')
+                ->route('controle.apiatendimentos.index')
     			->with('msg', 'Atualizado com sucesso.')
     			->with('error', false);
     		}
             return redirect()
-                ->route('controle.<%= props.name %>s.form')
+                ->route('controle.apiatendimentos.form')
                 ->with('msg', 'Falha na operação.')
                 ->with('error', true)->withInput();
     	}
         return redirect()
-            ->route('controle.<%= props.name %>s.form')
+            ->route('controle.apiatendimentos.form')
     		->with('msg', 'Falha na operação.')
     		->with('error', true)->withInput();
     }
 
     public function excluir($id)
     {
-    	$<%= props.name %> = Banner::find($id);
-        if ($<%= props.name %>) 
+    	$apiatendimento = Banner::find($id);
+        if ($apiatendimento) 
         {
-    		$<%= props.name %>->delete();
+    		$apiatendimento->delete();
             return redirect()
-                ->route('controle.<%= props.name %>s.index')
+                ->route('controle.apiatendimentos.index')
     			->with('msg', 'Deletado com sucesso.')
     			->with('error', false);
     	}
         return redirect()
-            ->route('controle.<%= props.name %>s.index')
+            ->route('controle.apiatendimentos.index')
     		->with('msg', 'Falha na operação.')
     		->with('error', true);
     }
