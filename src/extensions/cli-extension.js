@@ -6,6 +6,10 @@ module.exports = toolbox => {
     toolbox.print.info('called foo extension')
   }
 
+  toolbox.htmlGenerate = () => {
+    
+  }
+
   // enable this if you want to read configuration in from
   // the current folder's package.json (in a "grao" property),
   // grao.config.json, etc.

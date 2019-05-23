@@ -17,7 +17,7 @@ class <%= props.nameCapitalize %>Controller extends Controller
 
     public function form($id = null)
     {
-    	$data = ['<%= props.name %>'];
+    	$data = ['<%= props.name %>', 'id'];
     	$<%= props.name %> = <%= props.nameCapitalize %>::find($id);
     	return view('controle.<%= props.name %>s.form', compact($data));
     }

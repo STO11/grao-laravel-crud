@@ -1,0 +1,22 @@
+@extends('brediinstitucional::layouts.master')
+@section('content')
+<table>
+    <thead>
+    <% for (var prop in props.resultsQuery ) { _%>
+        <th><%= props.resultsQuery[prop].Field _%></th>
+    <% } _%>
+        <th>Opções</th>
+    </thead>
+    <tbody>
+    <tr>
+    <% for (var prop in props.resultsQuery ) { _%>
+        <td>{{ <%= props.name _%>-><%= props.resultsQuery[prop].Field _%> }}</td>
+    <% } _%>
+        <td>
+                <a href="{{ route('controle.<%= props.name _%>.alterar') }}">Alterar</a>
+                <a href="{{ route('controle.<%= props.name _%>.excluir') }}">Excluir</a>
+            </td>
+    </tr>
+    </tbody>
+</table>
+@stop
