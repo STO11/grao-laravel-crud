@@ -1,22 +1,24 @@
-@extends('brediinstitucional::layouts.master')
-@section('content')
+
 <table>
     <thead>
     <% for (var prop in props.resultsQuery ) { _%>
-        <th><%= props.resultsQuery[prop].Field _%></th>
+            <th><%= props.resultsQuery[prop].Field _%></th>
     <% } _%>
         <th>Opções</th>
     </thead>
     <tbody>
-    <tr>
-    <% for (var prop in props.resultsQuery ) { _%>
-        <td>{{ <%= props.name _%>-><%= props.resultsQuery[prop].Field _%> }}</td>
-    <% } _%>
-        <td>
-                <a href="{{ route('controle.<%= props.name _%>.alterar') }}">Alterar</a>
-                <a href="{{ route('controle.<%= props.name _%>.excluir') }}">Excluir</a>
-            </td>
-    </tr>
+    @if($<%= props.name _%>s->count())
+        @foreach($<%= props.name _%>s as $<%= props.name _%>)
+            <tr>
+        <% for (var prop in props.resultsQuery ) { _%>
+                <td>{{ $<%= props.name _%>-><%= props.resultsQuery[prop].Field _%> }}</td>
+        <% } _%>
+            <td>
+                    <a href="{{ route('controle.<%= props.name _%>.update', $<%= props.name _%>->id _%>) }}">Alterar</a>
+                    <a href="{{ route('controle.<%= props.name _%>.destroy', $<%= props.name _%>->id _%>) }}">Excluir</a>
+                </td>
+        </tr>
+        @endforeach
+    @endif
     </tbody>
 </table>
-@stop

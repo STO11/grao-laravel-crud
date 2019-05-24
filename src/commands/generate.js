@@ -15,8 +15,8 @@ module.exports = {
 
     const checkPlural = (s) => {
       if(strings.pluralize.isPlural(s))
-        //s = s.slice(0, -1) 
-        s = strings.singular(s)
+        s = s.slice(0, -1) 
+        //s = strings.singular(s)
         return s
     };
 
@@ -27,12 +27,11 @@ module.exports = {
     const fs = require('fs');
     const mysql  = require('mysql');
     const name = strings.camelCase(checkPlural(parameters.first)).toLowerCase();
-    const nameCapitalize = checkPlural(strings.upperFirst(name)); //name.charAt(0).toUpperCase() + strings.camelCase(name.slice(1))
+    const nameCapitalize = checkPlural(strings.upperFirst(strings.camelCase(parameters.first))); //name.charAt(0).toUpperCase() + strings.camelCase(name.slice(1))
     const table = parameters.first;
     let resultsQuery = [];
     let config = new Map();
     
-
     //====================================================================================================
     //==================================== FILE .ENV CONFIG MYSQL ===========================================
     //====================================================================================================
@@ -81,6 +80,64 @@ module.exports = {
     //====================================================================================================
 
     //====================================================================================================
+    //========================================= VIEW CONFIG ==============================================
+    //====================================================================================================
+
+    // try 
+    // {
+    //   const env = fs.readFileSync('').toString().split("\n");
+    //   if(!env.length)
+    //   {
+    //     await generate({
+    //       template: 'model.js.ejs',
+    //       target: `app/Http/${nameCapitalize}.php`,
+    //       props: { nameCapitalize }
+    //     });
+    //   } 
+    // }catch(e)
+    // {
+    //   error(`Please create the .env file`);
+    //   return false;
+    // }
+
+    let dir = './grao-config';
+    if (!fs.existsSync(dir))
+    {
+      fs.mkdirSync(dir);
+      fs.readFile('src/templates/index.js.ejs', function(err, data) {
+        if (err) {
+          throw err;
+        }
+        fs.writeFile('./grao-config/index.js.ejs', data,function(err, data) {
+          if (err) {
+            throw err;
+          }
+        });
+      });
+      fs.readFile('src/templates/form.js.ejs', function(err, data) {
+        if (err) {
+          throw err;
+        }
+        fs.writeFile('./grao-config/form.js.ejs', data,function(err, data) {
+          if (err) {
+            throw err;
+          }
+        });
+      });
+      fs.writeFile('./grao-config/routes.php', '<?php \r',function(err, data) {
+        if (err) {
+          throw err;
+        }
+      });
+    }
+
+
+    //====================================================================================================
+    //====================================================================================================
+    //====================================================================================================
+
+
+    //====================================================================================================
     //==================================== CONNECTION MYSQL ==============================================
     //====================================================================================================
 
@@ -114,6 +171,7 @@ module.exports = {
         }
       });
       await delay();
+      resultsQuery = resultsQuery.splice(1,resultsQuery.length);
       connection.end();
     }catch(e)
     {
@@ -126,8 +184,6 @@ module.exports = {
     //====================================================================================================
 
 
-    //console.log(JSON.stringify(resultsQuery[0]));
-
     //====================================================================================================
     //==================================== GENERATE HTML =================================================
     //====================================================================================================
@@ -135,7 +191,7 @@ module.exports = {
     await generate({
       template: 'model.js.ejs',
       target: `app/Http/${nameCapitalize}.php`,
-      props: { nameCapitalize }
+      props: { nameCapitalize, name, resultsQuery }
     });
 
     info(`Generated file at app/Http/${nameCapitalize}.php`);
@@ -148,22 +204,75 @@ module.exports = {
 
     info(`Generated file app/Http/Controllers/Controle/${nameCapitalize}Controller.php`);
 
-    await generate({
-      template: 'index.js.ejs',
-      target: `resources/views/controle/${name}/index.blade.php`,
-      props: { nameCapitalize, name, resultsQuery }
-    });
+
+    if (!fs.existsSync(dir+'/index.js.ejs'))
+    {
+      await generate({
+        template: 'index.js.ejs',
+        target: `resources/views/controle/${name}/index.blade.php`,
+        props: { nameCapitalize, name, resultsQuery }
+      });
+    }else{
+      await generate({
+        template: '../../grao-config/index.js.ejs',
+        target: `resources/views/controle/${name}/index.blade.php`,
+        props: { nameCapitalize, name, resultsQuery }
+      });
+    }
 
     info(`Generated file resources/views/controle/${name}/index.blade.php`);
 
-    await generate({
-      template: 'form.js.ejs',
-      target: `resources/views/controle/${name}/form.blade.php`,
-      props: { nameCapitalize, name, resultsQuery },
-      rmWhitespace:true,
-    });
+    if (!fs.existsSync(dir+'/index.js.ejs'))
+    {
+      await generate({
+        template: 'form.js.ejs',
+        target: `resources/views/controle/${name}/form.blade.php`,
+        props: { nameCapitalize, name, resultsQuery }
+      });
+    }else{
+      await generate({
+        template: '../../grao-config/form.js.ejs',
+        target: `resources/views/controle/${name}/form.blade.php`,
+        props: { nameCapitalize, name, resultsQuery }
+      });
+    }
 
     info(`Generated file resources/views/controle/${name}/form.blade.php`);
+
+  
+    let route = "\r\r //========================== "+name+" ================================ \r\r \
+      Route::get('"+name+"', [\r \
+        'as'   => 'controle."+name+".index',\r \
+        'permissao' => 'controle."+name+".index',\r \
+        'uses' => 'Controle\\"+nameCapitalize+"Controller@index',\r \
+      ]);\r \
+      Route::get('"+name+"/form/{id?}', [\r \
+        'as'   => 'controle."+name+".form',\r \
+        'permissao' => 'controle."+name+".form',\r \
+        'uses' => 'Controle\\"+nameCapitalize+"Controller@form',\r \
+      ]);\r \
+      Route::post('"+name+"/create', [\r \
+        'as'   => 'controle."+name+".create',\r \
+        'permissao' => 'controle."+name+".create',\r \
+        'uses' => 'Controle\\"+nameCapitalize+"Controller@create',\r \
+      ]);\r \
+      Route::post('"+name+"/update/{id}', [\r \
+        'as'   => 'controle."+name+".update',\r \
+        'permissao' => 'controle."+name+".update',\r \
+        'uses' => 'Controle\\"+nameCapitalize+"Controller@update',\r \
+      ]);\r \
+      Route::get('"+name+"/destroy/{id}', [\r \
+        'as'   => 'controle."+name+".destroy',\r \
+        'permissao' => 'controle."+name+".destroy',\r \
+        'uses' => 'Controle\\"+nameCapitalize+"Controller@destroy',\r \
+      ]);";
+
+    fs.appendFile('./grao-config/routes.php', route, function (err) {
+      if (err) throw err;
+      //console.log('Updated!');
+      info(`Update file routes /grao-config/routes.php`);
+    });
+  
 
     //====================================================================================================
     //====================================================================================================
