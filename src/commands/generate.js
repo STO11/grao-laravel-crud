@@ -1,5 +1,5 @@
 
-//import * as html from '../extensions/html-generate'
+//import * as html from '/extensions/html-generate'
 
 module.exports = {
   name: 'generate',
