@@ -1,24 +1,14 @@
-# grao CLI
+# Grão CLI (Crud para Laravel)
 
-A CLI for grao.
+Um CLI para criação de arquivos básicos para laravel.
 
-## Customizing your CLI
+# Usage (Install global) 
 
-Check out the documentation at https://github.com/infinitered/gluegun/tree/master/docs.
+----------------------------------------------------
 
-## Publishing to NPM
+npm i -g grao-laravel-crud
 
-To package your CLI up for NPM, do this:
-
-```shell
-$ npm login
-$ npm whoami
-$ npm lint
-$ npm test
-(if typescript, run `npm run build` here)
-$ npm publish
-```
-
+----------------------------------------------------
 # License
 
 MIT - see LICENSE

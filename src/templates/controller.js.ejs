@@ -22,7 +22,7 @@ class <%= props.nameCapitalize %>Controller extends Controller
     	return view('controle.<%= props.name %>s.form', compact($data));
     }
 
-    public function cadastrar(Request $request)
+    public function create(Request $request)
     {
     	$input = $request->except('_token');
         $<%= props.name %> = <%= props.nameCapitalize %>::create($input);
@@ -40,7 +40,7 @@ class <%= props.nameCapitalize %>Controller extends Controller
             ->withInput();
     }
 
-    public function alterar(Request $request, $id)
+    public function update(Request $request, $id)
     {
     	$input = $request->except('_token', 'imagem');
         $<%= props.name %> = <%= props.nameCapitalize %>::find($id);
@@ -64,7 +64,7 @@ class <%= props.nameCapitalize %>Controller extends Controller
     		->with('error', true)->withInput();
     }
 
-    public function excluir($id)
+    public function destroy($id)
     {
     	$<%= props.name %> = Banner::find($id);
         if ($<%= props.name %>) 

@@ -9,6 +9,6 @@ class <%= props.nameCapitalize %> extends Model
 {
     use SoftDeletes;
     
-    protected $fillable = [];
+    protected $fillable = [<% for ( var prop in props.resultsQuery ) { _%><% if(prop != 0) { _%>','<% }else{ _%>'<% } _%> <%= props.resultsQuery[prop].Field _%><% } _%>'];
 
 }

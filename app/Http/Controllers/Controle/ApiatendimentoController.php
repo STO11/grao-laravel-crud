@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Controle;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Apiatendimento;
+use App\Models\ApiAtendimento;
 
-class ApiatendimentoController extends Controller
+class ApiAtendimentoController extends Controller
 {
     public function index()
     {	
@@ -18,14 +18,14 @@ class ApiatendimentoController extends Controller
     public function form($id = null)
     {
     	$data = ['apiatendimento', 'id'];
-    	$apiatendimento = Apiatendimento::find($id);
+    	$apiatendimento = ApiAtendimento::find($id);
     	return view('controle.apiatendimentos.form', compact($data));
     }
 
-    public function cadastrar(Request $request)
+    public function create(Request $request)
     {
     	$input = $request->except('_token');
-        $apiatendimento = Apiatendimento::create($input);
+        $apiatendimento = ApiAtendimento::create($input);
         if ($apiatendimento) 
         {
            return redirect()
@@ -40,10 +40,10 @@ class ApiatendimentoController extends Controller
             ->withInput();
     }
 
-    public function alterar(Request $request, $id)
+    public function update(Request $request, $id)
     {
     	$input = $request->except('_token', 'imagem');
-        $apiatendimento = Apiatendimento::find($id);
+        $apiatendimento = ApiAtendimento::find($id);
         if ($apiatendimento) 
         {
             if($apiatendimento->update($input))
@@ -64,7 +64,7 @@ class ApiatendimentoController extends Controller
     		->with('error', true)->withInput();
     }
 
-    public function excluir($id)
+    public function destroy($id)
     {
     	$apiatendimento = Banner::find($id);
         if ($apiatendimento) 
