@@ -34,12 +34,15 @@ module.exports = {
     const table = parameters.first;
     let resultsQuery = [];
     let config = new Map();
-    //const path = require('path').basename(__dirname);
 
-    //console.log(__dirname);
-
-    //return false;
-    
+    const space = parameters.second;
+    if(!space)
+    {
+      info(`grao g table_name namespace`);
+      error(`Please pass the namespace`);
+      return false;
+    }
+  
     //====================================================================================================
     //==================================== FILE .ENV CONFIG MYSQL ===========================================
     //====================================================================================================
@@ -122,11 +125,33 @@ module.exports = {
           }
         });
       });
-      fs.readFile(__dirname+'/../src/templates/form.js.ejs', function(err, data) {
+      fs.readFile(__dirname+'/../templates/form.js.ejs', function(err, data) {
         if (err) {
           throw err;
         }
         fs.writeFile('./grao-config/form.js.ejs', data,function(err, data) {
+          if (err) {
+            throw err;
+          }
+        });
+      });
+
+      fs.readFile(__dirname+'/../templates/controller.js.ejs', function(err, data) {
+        if (err) {
+          throw err;
+        }
+        fs.writeFile('./grao-config/controller.js.ejs', data,function(err, data) {
+          if (err) {
+            throw err;
+          }
+        });
+      });
+
+      fs.readFile(__dirname+'/../templates/model.js.ejs', function(err, data) {
+        if (err) {
+          throw err;
+        }
+        fs.writeFile('./grao-config/model.js.ejs', data,function(err, data) {
           if (err) {
             throw err;
           }
@@ -196,83 +221,101 @@ module.exports = {
     //==================================== GENERATE HTML =================================================
     //====================================================================================================
 
-    await generate({
-      template: 'model.js.ejs',
-      target: `app/Http/${nameCapitalize}.php`,
-      props: { nameCapitalize, name, resultsQuery }
-    });
+    if (!fs.existsSync(dir+'/model.js.ejs'))
+    {
+      await generate({
+        template: 'model.js.ejs',
+        target: `app/Http/${nameCapitalize}.php`,
+        props: { nameCapitalize, name, resultsQuery }
+      });
+    }else{
+      await generate({
+        template: '../../grao-config/model.js.ejs',
+        target: `app/Http/${nameCapitalize}.php`,
+        props: { nameCapitalize, name, resultsQuery }
+      });
+    }
 
-    info(`Generated file at app/Http/${nameCapitalize}.php`);
+    success(`Generated file at app/Http/${nameCapitalize}.php`);
 
-    await generate({
-      template: 'controller.js.ejs',
-      target: `app/Http/Controllers/Controle/${nameCapitalize}Controller.php`,
-      props: { nameCapitalize, name }
-    });
+    if (!fs.existsSync(dir+'/controller.js.ejs'))
+    {
+      await generate({
+        template: 'controller.js.ejs',
+        target: `app/Http/Controllers/${strings.upperFirst(space)}/${nameCapitalize}Controller.php`,
+        props: { nameCapitalize, name }
+      });
+    }else{
+      await generate({
+        template: '../../grao-config/controller.js.ejs',
+        target: `app/Http/Controllers/${strings.upperFirst(space)}/${nameCapitalize}Controller.php`,
+        props: { nameCapitalize, name, resultsQuery }
+      });
+    }
 
-    info(`Generated file app/Http/Controllers/Controle/${nameCapitalize}Controller.php`);
+    success(`Generated file app/Http/Controllers/${strings.upperFirst(space)}/${nameCapitalize}Controller.php`);
 
 
     if (!fs.existsSync(dir+'/index.js.ejs'))
     {
       await generate({
         template: 'index.js.ejs',
-        target: `resources/views/controle/${name}/index.blade.php`,
+        target: `resources/views/${space}/${name}/index.blade.php`,
         props: { nameCapitalize, name, resultsQuery }
       });
     }else{
       await generate({
         template: '../../grao-config/index.js.ejs',
-        target: `resources/views/controle/${name}/index.blade.php`,
+        target: `resources/views/${space}/${name}/index.blade.php`,
         props: { nameCapitalize, name, resultsQuery }
       });
     }
 
-    info(`Generated file resources/views/controle/${name}/index.blade.php`);
+    success(`Generated file resources/views/${space}/${name}/index.blade.php`);
 
     if (!fs.existsSync(dir+'/index.js.ejs'))
     {
       await generate({
         template: 'form.js.ejs',
-        target: `resources/views/controle/${name}/form.blade.php`,
+        target: `resources/views/${space}/${name}/form.blade.php`,
         props: { nameCapitalize, name, resultsQuery }
       });
     }else{
       await generate({
         template: '../../grao-config/form.js.ejs',
-        target: `resources/views/controle/${name}/form.blade.php`,
+        target: `resources/views/${space}/${name}/form.blade.php`,
         props: { nameCapitalize, name, resultsQuery }
       });
     }
 
-    info(`Generated file resources/views/controle/${name}/form.blade.php`);
+    success(`Generated file resources/views/${space}/${name}/form.blade.php`);
 
   
-    let route = "\r\r //========================== "+name+" ================================ \r\r \
-      Route::get('"+name+"', [\r \
-        'as'   => 'controle."+name+".index',\r \
-        'permissao' => 'controle."+name+".index',\r \
-        'uses' => 'Controle\\"+nameCapitalize+"Controller@index',\r \
-      ]);\r \
-      Route::get('"+name+"/form/{id?}', [\r \
-        'as'   => 'controle."+name+".form',\r \
-        'permissao' => 'controle."+name+".form',\r \
-        'uses' => 'Controle\\"+nameCapitalize+"Controller@form',\r \
-      ]);\r \
-      Route::post('"+name+"/create', [\r \
-        'as'   => 'controle."+name+".create',\r \
-        'permissao' => 'controle."+name+".create',\r \
-        'uses' => 'Controle\\"+nameCapitalize+"Controller@create',\r \
-      ]);\r \
-      Route::post('"+name+"/update/{id}', [\r \
-        'as'   => 'controle."+name+".update',\r \
-        'permissao' => 'controle."+name+".update',\r \
-        'uses' => 'Controle\\"+nameCapitalize+"Controller@update',\r \
-      ]);\r \
-      Route::get('"+name+"/destroy/{id}', [\r \
-        'as'   => 'controle."+name+".destroy',\r \
-        'permissao' => 'controle."+name+".destroy',\r \
-        'uses' => 'Controle\\"+nameCapitalize+"Controller@destroy',\r \
+    let route = ""+toolbox.filesystem.eol+" //========================== "+name+" ================================ "+toolbox.filesystem.eol+"\
+      Route::get('"+name+"', ["+toolbox.filesystem.eol+" \
+        'as'   => '"+space+"."+name+".index',"+toolbox.filesystem.eol+" \
+        'permissao' => '"+space+"."+name+".index',"+toolbox.filesystem.eol+" \
+        'uses' => '"+strings.upperFirst(space)+"\\"+nameCapitalize+"Controller@index',"+toolbox.filesystem.eol+" \
+      ]);"+toolbox.filesystem.eol+" \
+      Route::get('"+name+"/form/{id?}', ["+toolbox.filesystem.eol+" \
+        'as'   => '"+space+"."+name+".form',"+toolbox.filesystem.eol+" \
+        'permissao' => '"+space+"."+name+".form',"+toolbox.filesystem.eol+" \
+        'uses' => '"+strings.upperFirst(space)+"\\"+nameCapitalize+"Controller@form',"+toolbox.filesystem.eol+" \
+      ]);"+toolbox.filesystem.eol+" \
+      Route::post('"+name+"/create', ["+toolbox.filesystem.eol+" \
+        'as'   => '"+space+"."+name+".create',"+toolbox.filesystem.eol+" \
+        'permissao' => '"+space+"."+name+".create',"+toolbox.filesystem.eol+" \
+        'uses' => '"+strings.upperFirst(space)+"\\"+nameCapitalize+"Controller@create',"+toolbox.filesystem.eol+" \
+      ]);"+toolbox.filesystem.eol+" \
+      Route::post('"+name+"/update/{id}', ["+toolbox.filesystem.eol+" \
+        'as'   => '"+space+"."+name+".update',"+toolbox.filesystem.eol+" \
+        'permissao' => '"+space+"."+name+".update',"+toolbox.filesystem.eol+" \
+        'uses' => '"+strings.upperFirst(space)+"\\"+nameCapitalize+"Controller@update',"+toolbox.filesystem.eol+" \
+      ]);"+toolbox.filesystem.eol+" \
+      Route::get('"+name+"/destroy/{id}', ["+toolbox.filesystem.eol+" \
+        'as'   => '"+space+"."+name+".destroy',"+toolbox.filesystem.eol+" \
+        'permissao' => '"+space+"."+name+".destroy',"+toolbox.filesystem.eol+" \
+        'uses' => '"+strings.upperFirst(space)+"\\"+nameCapitalize+"Controller@destroy',"+toolbox.filesystem.eol+" \
       ]);";
 
     fs.appendFile('./grao-config/routes.php', route, function (err) {
