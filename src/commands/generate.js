@@ -112,7 +112,7 @@ module.exports = {
     if (!fs.existsSync(dir))
     {
       fs.mkdirSync(dir);
-      fs.readFile(__dirname+'../templates/index.js.ejs', function(err, data) {
+      fs.readFile(__dirname+'/../templates/index.js.ejs', function(err, data) {
         if (err) {
           throw err;
         }
@@ -122,7 +122,7 @@ module.exports = {
           }
         });
       });
-      fs.readFile(__dirname+'../src/templates/form.js.ejs', function(err, data) {
+      fs.readFile(__dirname+'/../src/templates/form.js.ejs', function(err, data) {
         if (err) {
           throw err;
         }
