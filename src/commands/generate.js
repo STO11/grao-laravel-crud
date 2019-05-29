@@ -35,6 +35,10 @@ module.exports = {
     let resultsQuery = [];
     let config = new Map();
 
+
+    // console.log(process.cwd());
+    // return false;
+
     const space = parameters.second;
     if(!space)
     {
@@ -230,7 +234,7 @@ module.exports = {
       });
     }else{
       await generate({
-        template: '../../grao-config/model.js.ejs',
+        template: process.cwd()+'/grao-config/model.js.ejs',
         target: `app/Http/${nameCapitalize}.php`,
         props: { nameCapitalize, name, resultsQuery }
       });
@@ -247,7 +251,7 @@ module.exports = {
       });
     }else{
       await generate({
-        template: '../../grao-config/controller.js.ejs',
+        template: process.cwd()+'/grao-config/controller.js.ejs',
         target: `app/Http/Controllers/${strings.upperFirst(space)}/${nameCapitalize}Controller.php`,
         props: { nameCapitalize, name, resultsQuery }
       });
@@ -265,7 +269,7 @@ module.exports = {
       });
     }else{
       await generate({
-        template: '../../grao-config/index.js.ejs',
+        template: process.cwd()+'/grao-config/index.js.ejs',
         target: `resources/views/${space}/${name}/index.blade.php`,
         props: { nameCapitalize, name, resultsQuery }
       });
@@ -282,7 +286,7 @@ module.exports = {
       });
     }else{
       await generate({
-        template: '../../grao-config/form.js.ejs',
+        template: process.cwd()+'/grao-config/form.js.ejs',
         target: `resources/views/${space}/${name}/form.blade.php`,
         props: { nameCapitalize, name, resultsQuery }
       });
