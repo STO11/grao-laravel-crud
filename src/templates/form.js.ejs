@@ -1,8 +1,8 @@
 
     @if($id)
-        {!! Form::model($<%= props.name %>,['route' => 'controle.<%= props.name %>.update', 'files' => true]) !!}
+        {!! Form::model($<%= props.name %>,['route' => ['<%= props.space %>.<%= props.name %>.update', $id], 'files' => true]) !!}
     @else 
-        {!! Form::model(null,['route' => 'controle.<%= props.name %>.create', 'files' => true]) !!}
+        {!! Form::model(null,['route' => '<%= props.space %>.<%= props.name %>.create', 'files' => true]) !!}
     @endif
 
     <% props.resultsQuery.forEach(function(res){ _%>
@@ -40,12 +40,12 @@
     <% }); _%>
         
     @if($id)
-        @can('controle.<%= props.name %>.alterar')
+        {{-- @can('<%= props.space %>.<%= props.name %>.alterar') --}}
             <button type="submit" class="btn btn-primary">Salvar</button>
-        @endcan
+        {{-- @endcan --}}
     @else 
-        @can('controle.<%= props.name %>.cadastrar')
+        {{-- @can('<%= props.space %>.<%= props.name %>.cadastrar') --}}
             <button type="submit" class="btn btn-primary">Salvar</button>
-        @endcan
+        {{-- @endcan --}}
     @endif
 {!! Form::close() !!}

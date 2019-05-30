@@ -34,15 +34,15 @@ module.exports = {
     const table = parameters.first;
     let resultsQuery = [];
     let config = new Map();
-
-    const space = parameters.second;
+    
+    let space = parameters.second;
     if(!space)
     {
       info(`grao g table_name namespace`);
       error(`Please pass the namespace`);
       return false;
     }
-  
+    space = space.toLowerCase();
     //====================================================================================================
     //==================================== FILE .ENV CONFIG MYSQL ===========================================
     //====================================================================================================
@@ -205,6 +205,8 @@ module.exports = {
     //==================================== GENERATE HTML =================================================
     //====================================================================================================
 
+    let spaceFirst = strings.upperFirst(space);
+
     if (!fs.existsSync(dir+'/model.js.ejs'))
     {
       await generate({
@@ -227,19 +229,20 @@ module.exports = {
     {
       await generate({
         template: 'controller.js.ejs',
-        target: `app/Http/Controllers/${strings.upperFirst(space)}/${nameCapitalize}Controller.php`,
-        props: { nameCapitalize, name }
+        target: `app/Http/Controllers/${spaceFirst}/${nameCapitalize}Controller.php`,
+        props: { nameCapitalize, name, spaceFirst, resultsQuery, space }
       });
     }else{
+      
       await generate({
         template: 'controller.js.ejs',
-        target: `app/Http/Controllers/${strings.upperFirst(space)}/${nameCapitalize}Controller.php`,
-        props: { nameCapitalize, name, resultsQuery },
+        target: `app/Http/Controllers/${spaceFirst}/${nameCapitalize}Controller.php`,
+        props: { nameCapitalize, name, resultsQuery, spaceFirst, space },
         directory: './grao-config/'
       });
     }
 
-    success(`Generated file app/Http/Controllers/${strings.upperFirst(space)}/${nameCapitalize}Controller.php`);
+    success(`Generated file app/Http/Controllers/${spaceFirst}/${nameCapitalize}Controller.php`);
 
 
     if (!fs.existsSync(dir+'/index.js.ejs'))
@@ -247,13 +250,13 @@ module.exports = {
       await generate({
         template: 'index.js.ejs',
         target: `resources/views/${space}/${name}/index.blade.php`,
-        props: { nameCapitalize, name, resultsQuery }
+        props: { nameCapitalize, name, resultsQuery, space }
       });
     }else{
       await generate({
         template: 'index.js.ejs',
         target: `resources/views/${space}/${name}/index.blade.php`,
-        props: { nameCapitalize, name, resultsQuery },
+        props: { nameCapitalize, name, resultsQuery, space },
         directory: './grao-config/'
       });
     }
@@ -265,13 +268,13 @@ module.exports = {
       await generate({
         template: 'form.js.ejs',
         target: `resources/views/${space}/${name}/form.blade.php`,
-        props: { nameCapitalize, name, resultsQuery }
+        props: { nameCapitalize, name, resultsQuery, space }
       });
     }else{
       await generate({
         template: 'form.js.ejs',
         target: `resources/views/${space}/${name}/form.blade.php`,
-        props: { nameCapitalize, name, resultsQuery },
+        props: { nameCapitalize, name, resultsQuery, space },
         directory: './grao-config/'
       });
     }

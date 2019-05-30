@@ -1,25 +1,25 @@
 <?php
 
-namespace App\Http\Controllers\Controle;
+namespace App\Http\Controllers\<%= props.spaceFirst %>;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\<%= props.nameCapitalize %>;
+use App\<%= props.nameCapitalize %>;
 
 class <%= props.nameCapitalize %>Controller extends Controller
 {
     public function index()
     {	
     	$data = ['<%= props.name %>s'];
-    	$<%= props.name %>s = Banner::orderBy('id', 'desc')->get();
-    	return view('controle.<%= props.name %>s.index', compact($data));
+    	$<%= props.name %>s = <%= props.nameCapitalize %>::orderBy('id', 'desc')->get();
+    	return view('<%= props.space %>.<%= props.name %>.index', compact($data));
     }
 
     public function form($id = null)
     {
     	$data = ['<%= props.name %>', 'id'];
     	$<%= props.name %> = <%= props.nameCapitalize %>::find($id);
-    	return view('controle.<%= props.name %>s.form', compact($data));
+    	return view('<%= props.space %>.<%= props.name %>.form', compact($data));
     }
 
     public function create(Request $request)
@@ -29,12 +29,12 @@ class <%= props.nameCapitalize %>Controller extends Controller
         if ($<%= props.name %>) 
         {
            return redirect()
-                ->route('controle.<%= props.name %>s.index')
+                ->route('<%= props.space %>.<%= props.name %>.index')
     			->with('msg', 'Cadastrado com sucesso.')
     			->with('error', false);
     	}
         return redirect()
-            ->route('controle.<%= props.name %>.form')
+            ->route('<%= props.space %>.<%= props.name %>.form')
     		->with('msg', 'Falha na operação.')
             ->with('error', true)
             ->withInput();
@@ -49,34 +49,34 @@ class <%= props.nameCapitalize %>Controller extends Controller
             if($<%= props.name %>->update($input))
             {
                 return redirect()
-                ->route('controle.<%= props.name %>s.index')
+                ->route('<%= props.space %>.<%= props.name %>.index')
     			->with('msg', 'Atualizado com sucesso.')
     			->with('error', false);
     		}
             return redirect()
-                ->route('controle.<%= props.name %>s.form')
+                ->route('<%= props.space %>.<%= props.name %>.form')
                 ->with('msg', 'Falha na operação.')
                 ->with('error', true)->withInput();
     	}
         return redirect()
-            ->route('controle.<%= props.name %>s.form')
+            ->route('<%= props.space %>.<%= props.name %>.form')
     		->with('msg', 'Falha na operação.')
     		->with('error', true)->withInput();
     }
 
     public function destroy($id)
     {
-    	$<%= props.name %> = Banner::find($id);
+    	$<%= props.name %> = <%= props.nameCapitalize %>::find($id);
         if ($<%= props.name %>) 
         {
     		$<%= props.name %>->delete();
             return redirect()
-                ->route('controle.<%= props.name %>s.index')
+                ->route('<%= props.space %>.<%= props.name %>.index')
     			->with('msg', 'Deletado com sucesso.')
     			->with('error', false);
     	}
         return redirect()
-            ->route('controle.<%= props.name %>s.index')
+            ->route('<%= props.space %>.<%= props.name %>.index')
     		->with('msg', 'Falha na operação.')
     		->with('error', true);
     }
