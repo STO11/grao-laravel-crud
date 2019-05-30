@@ -48,9 +48,9 @@ module.exports = {
     //====================================================================================================
     try 
     {
-    const env = fs.readFileSync('.env').toString().split(toolbox.filesystem.eol);
+    const env = await fs.readFileSync('.env').toString().split(toolbox.filesystem.eol);
     if(env.length)
-      env.map((item,index) => 
+      await env.map((item,index) => 
       {
         let [i, value] = item.split('=');
         if(['DB_CONNECTION','DB_HOST','DB_PORT','DB_DATABASE','DB_USERNAME','DB_PASSWORD'].indexOf(i) != -1)
@@ -64,6 +64,9 @@ module.exports = {
       return false;
     }
 
+    await delay();
+    await delay();
+    
     if(config.get('DB_CONNECTION') != 'mysql')
     {
       error(`Database mysql in .env file not configured ['DB_CONNECTION']`);
