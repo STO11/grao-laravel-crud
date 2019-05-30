@@ -1,8 +1,10 @@
 {
   "name": "grao-laravel-crud",
-  "version": "1.0.1",
+  "author": {"name": "Suelton de Souza Lima", "email": "sueltonlima@gmail.com"},
+  "version": "1.0.4",
   "description": "Grão CLI para laravel",
   "private": false,
+  "repository": {"type": "git", "url": "https://github.com/STO11/grao-laravel-grud"},
   "bin": {
     "grao": "bin/grao"
   },
@@ -43,5 +45,14 @@
   "prettier": {
     "semi": false,
     "singleQuote": true
-  }
+  },
+  "keywords": [
+    "crud",
+    "laravel",
+    "generate crud",
+    "generate page",
+    "laravel cmd",
+    "laravel crud",
+    "cli crud"
+  ]
 }

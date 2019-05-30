@@ -4,6 +4,6 @@ module.exports = {
   run: async toolbox => {
     const { print } = toolbox
 
-    print.info('Welcome to your CLI')
+    print.info('Welcome to grão CLI =)')
   }
 }

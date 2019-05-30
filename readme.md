@@ -19,7 +19,9 @@ IMPORTANT: This module only uses MYSQL connection, reading the .env file.
 
 COMMAND:
 > grao g table_name namespace 
+
 or 
+
 > grao generate table_name namespace
 
 Where table_name is the name of the table
@@ -32,16 +34,18 @@ Where namespace is the name of the Workspace / Namespace.
 
 ----------------------------------------------------
 
-If you want to change something in the next 'grud',
+If you want to change something in the next 'crud',
 the grao-config folder will be created in your directory with .ejs files for modifications,
-any modification to these files will affect the generation of the grud`s files in the application. 
+any modification to these files will affect the generation of the crud`s files in the application. 
 If you want to re-create the folder just delete it and the files will come in the default.
 
 Or you can use the command below in laravel project. 
 He had erased and recreated the folder:
 
 > grao reset
+
 or 
+
 > grao r
 
 ----------------------------------------------------
