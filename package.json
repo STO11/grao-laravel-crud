@@ -1,7 +1,7 @@
 {
   "name": "grao-laravel-crud",
   "author": {"name": "Suelton de Souza Lima", "email": "sueltonlima@gmail.com"},
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Grão CLI para laravel",
   "private": false,
   "repository": {"type": "git", "url": "https://github.com/STO11/grao-laravel-grud"},
