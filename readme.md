@@ -1,6 +1,6 @@
 # Grão CLI (Crud para Laravel)
 
-Um CLI para criação de arquivos básicos para Laravel.
+A CLI for creating basic files for Laravel
 
 # Usage (Install global) 
 

@@ -1,6 +1,6 @@
 {
   "name": "grao-laravel-crud",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Grão CLI para laravel",
   "private": false,
   "bin": {
