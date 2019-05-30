@@ -35,10 +35,6 @@ module.exports = {
     let resultsQuery = [];
     let config = new Map();
 
-
-    // console.log(process.cwd());
-    // return false;
-
     const space = parameters.second;
     if(!space)
     {
@@ -97,23 +93,6 @@ module.exports = {
     //====================================================================================================
     //========================================= VIEW CONFIG ==============================================
     //====================================================================================================
-
-    // try 
-    // {
-    //   const env = fs.readFileSync('').toString().split("\n");
-    //   if(!env.length)
-    //   {
-    //     await generate({
-    //       template: 'model.js.ejs',
-    //       target: `app/Http/${nameCapitalize}.php`,
-    //       props: { nameCapitalize }
-    //     });
-    //   } 
-    // }catch(e)
-    // {
-    //   error(`Please create the .env file`);
-    //   return false;
-    // }
 
     let dir = './grao-config';
     if (!fs.existsSync(dir))
@@ -180,14 +159,14 @@ module.exports = {
 
     try 
     {
-      let connection = mysql.createConnection({
+      let connection = await mysql.createConnection({
         host     : config.get('DB_HOST'),
         user     : config.get('DB_USERNAME'),
         password : config.get('DB_PASSWORD'),
         database : config.get('DB_DATABASE')
       });
       
-      connection.connect();
+      await connection.connect();
       //TEST CONNECTION
       await connection.query('DESCRIBE '+table, async function (errors, results, fields) {
         //if (errors) throw console.error(errors);
@@ -207,6 +186,7 @@ module.exports = {
           });
         }
       });
+      await delay();
       await delay();
       resultsQuery = resultsQuery.splice(1,resultsQuery.length);
       connection.end();
@@ -234,9 +214,10 @@ module.exports = {
       });
     }else{
       await generate({
-        template: process.cwd()+'/grao-config/model.js.ejs',
+        template: 'model.js.ejs',
         target: `app/Http/${nameCapitalize}.php`,
-        props: { nameCapitalize, name, resultsQuery }
+        props: { nameCapitalize, name, resultsQuery },
+        directory: './grao-config/'
       });
     }
 
@@ -251,9 +232,10 @@ module.exports = {
       });
     }else{
       await generate({
-        template: process.cwd()+'/grao-config/controller.js.ejs',
+        template: 'controller.js.ejs',
         target: `app/Http/Controllers/${strings.upperFirst(space)}/${nameCapitalize}Controller.php`,
-        props: { nameCapitalize, name, resultsQuery }
+        props: { nameCapitalize, name, resultsQuery },
+        directory: './grao-config/'
       });
     }
 
@@ -269,9 +251,10 @@ module.exports = {
       });
     }else{
       await generate({
-        template: process.cwd()+'/grao-config/index.js.ejs',
+        template: 'index.js.ejs',
         target: `resources/views/${space}/${name}/index.blade.php`,
-        props: { nameCapitalize, name, resultsQuery }
+        props: { nameCapitalize, name, resultsQuery },
+        directory: './grao-config/'
       });
     }
 
@@ -286,9 +269,10 @@ module.exports = {
       });
     }else{
       await generate({
-        template: process.cwd()+'/grao-config/form.js.ejs',
+        template: 'form.js.ejs',
         target: `resources/views/${space}/${name}/form.blade.php`,
-        props: { nameCapitalize, name, resultsQuery }
+        props: { nameCapitalize, name, resultsQuery },
+        directory: './grao-config/'
       });
     }
 
