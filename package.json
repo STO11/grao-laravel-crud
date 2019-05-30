@@ -1,7 +1,7 @@
 {
   "name": "grao-laravel-crud",
   "author": {"name": "Suelton de Souza Lima", "email": "sueltonlima@gmail.com"},
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "Grão CLI para laravel",
   "private": false,
   "repository": {"type": "git", "url": "https://github.com/STO11/grao-laravel-grud"},
@@ -49,10 +49,25 @@
   "keywords": [
     "crud",
     "laravel",
+    "create",
     "generate crud",
     "generate page",
     "laravel cmd",
     "laravel crud",
-    "cli crud"
+    "cli crud",
+    "node cli",
+    "web cli",
+    "page crud",
+    "workspace crud",
+    "cli gluegun",
+    "laravel controller make",
+    "laravel command",
+    "make command",
+    "make page generator",
+    "create page",
+    "edit crud page",
+    "page create",
+    "web",
+    "web laravel create"
   ]
 }
