@@ -48,14 +48,14 @@ module.exports = {
     //====================================================================================================
     try 
     {
-    const env = await fs.readFileSync('.env').toString().split(toolbox.filesystem.eol);
+    const env = fs.readFileSync('.env').toString().split(toolbox.filesystem.eol);
     if(env.length)
-      await env.map((item,index) => 
+      env.map((item,index) => 
       {
         let [i, value] = item.split('=');
         if(['DB_CONNECTION','DB_HOST','DB_PORT','DB_DATABASE','DB_USERNAME','DB_PASSWORD'].indexOf(i) != -1)
         {
-          config.set(i, value);
+          config.set(i, strings.trim(value));
         }
       });
     }catch(e)
@@ -170,11 +170,11 @@ module.exports = {
       
       await connection.connect();
       //TEST CONNECTION
-      await connection.query('DESCRIBE '+table, async function (errors, results, fields) {
+      await connection.query('DESCRIBE ' + table, async function (errors, results, fields) {
         //if (errors) throw console.error(errors);
         if (errors) 
         { 
-          error(`Mysql connection failed`);
+          error(`Mysql connection failed` + JSON.stringify(errors));
           return false;
         }
         success(`Successful Mysql Connection DESCRIBE `+table);
@@ -213,13 +213,13 @@ module.exports = {
     {
       await generate({
         template: 'model.js.ejs',
-        target: `app/Http/${nameCapitalize}.php`,
+        target: `app/${nameCapitalize}.php`,
         props: { nameCapitalize, name, resultsQuery }
       });
     }else{
       await generate({
         template: 'model.js.ejs',
-        target: `app/Http/${nameCapitalize}.php`,
+        target: `app/${nameCapitalize}.php`,
         props: { nameCapitalize, name, resultsQuery },
         directory: './grao-config/'
       });
