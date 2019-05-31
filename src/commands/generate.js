@@ -225,7 +225,7 @@ module.exports = {
       });
     }
 
-    success(`Generated file at app/Http/${nameCapitalize}.php`);
+    success(`Generated file at app/${nameCapitalize}.php`);
 
     if (!fs.existsSync(dir+'/controller.js.ejs'))
     {
