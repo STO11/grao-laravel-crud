@@ -64,8 +64,7 @@ module.exports = {
       return false;
     }
 
-    await delay();
-    await delay();
+    await delay(500);
     
     if(config.get('DB_CONNECTION') != 'mysql')
     {
