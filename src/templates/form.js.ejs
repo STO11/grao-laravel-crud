@@ -31,12 +31,6 @@
                     {!! Form::select('<%= res.Field _%>', [], null, ['class' => 'form-control', 'required']) !!}
                 </div>
             <% } _%>
-            <% if(res.Type.indexOf('enum') >= 0) { _%>
-                <div class="form-group">
-                    <label for="<%= res.Field _%>"><%= res.Field _%>*</label>
-                    {!! Form::select('<%= res.Field _%>', [], null, ['class' => 'form-control', 'required']) !!}
-                </div>
-            <% } _%>
     <% }); _%>
         
     @if($id)
