@@ -65,12 +65,22 @@ module.exports = {
     {
       if(!table)
       {
-        let files = await getAllFiles('./database/migrations/crudconfig/');
+        let files = await getAllFiles('./database/migrations/crudconfig/create');
         if(files)
         {
-          files.sort().map(async (path,i) => {
+          files.map(async (path,i) => {
             let migrateCreate = await toolbox.system.run(`php artisan migrate --path=${path}`, { trim: true });
-            await toolbox.delay();
+            //await toolbox.delay();
+            info(migrateCreate);
+          })
+        }
+
+        files = await getAllFiles('./database/migrations/crudconfig/update');
+        if(files)
+        {
+          files.map(async (path,i) => {
+            let migrateCreate = await toolbox.system.run(`php artisan migrate --path=${path}`, { trim: true });
+            //await toolbox.delay();
             info(migrateCreate);
           })
         }
@@ -83,22 +93,22 @@ module.exports = {
       if(!table)
       {
 
-        let files = await getAllFiles('./database/migrations/crudconfig/update');
+        let files = await getAllFiles('./database/migrations/crudconfig/create');
         if(files)
         {
-          files.sort().map(async (path,i) => {
+          files.map(async (path,i) => {
             let migrateCreate = await toolbox.system.run(`php artisan migrate:rollback --path=${path}`, { trim: true });
-            await toolbox.delay();
+           // await toolbox.delay();
             info(migrateCreate);
           })
         }
-
-        files = await getAllFiles('./database/migrations/crudconfig/create');
+        
+        files = await getAllFiles('./database/migrations/crudconfig/update');
         if(files)
         {
-          files.sort().map(async (path,i) => {
+          files.map(async (path,i) => {
             let migrateCreate = await toolbox.system.run(`php artisan migrate:rollback --path=${path}`, { trim: true });
-            await toolbox.delay();
+           // await toolbox.delay();
             info(migrateCreate);
           })
         }
