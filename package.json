@@ -25,7 +25,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "gluegun": "^2.1.0",
+    "gluegun": "^3.3.0",
     "mysql":"2.17.1"
   },
   "devDependencies": {

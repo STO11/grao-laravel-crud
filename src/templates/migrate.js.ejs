@@ -1,0 +1,35 @@
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class Create<%= props.nameCapitalize _%>Table extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('<%= props.table _%>', function (Blueprint $table) {
+            $table->bigIncrements('id');
+        <% for(let p in props.cmdMigration) { _%>
+        $table-><%= props.cmdMigration[p] _%>('<%= p _%>'); 
+        <% } _%>
+        $table->timestamps();
+            $table->softDeletes();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('<%= props.table _%>');
+    }
+}

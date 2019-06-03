@@ -16,6 +16,7 @@ module.exports = {
       patching
     } = toolbox
 
+
     const checkPlural = (s) => {
       if(strings.pluralize.isPlural(s))
         s = s.slice(0, -1) 
@@ -23,17 +24,14 @@ module.exports = {
         return s
     };
 
-    const delay = () => {
-      return new Promise(resolve => setTimeout(resolve, 300));
-    }
-
     const fs = require('fs');
-    const mysql  = require('mysql');
+    //const mysql  = require('mysql');
     const name = strings.camelCase(checkPlural(parameters.first)).toLowerCase();
     const nameCapitalize = checkPlural(strings.upperFirst(strings.camelCase(parameters.first))); //name.charAt(0).toUpperCase() + strings.camelCase(name.slice(1))
     const table = parameters.first;
     let resultsQuery = [];
-    let config = new Map();
+    //let config = new Map();
+
     
     let space = parameters.second;
     if(!space)
@@ -46,46 +44,10 @@ module.exports = {
     //====================================================================================================
     //==================================== FILE .ENV CONFIG MYSQL ===========================================
     //====================================================================================================
-    try 
+    let config = await toolbox.getEnv();
+    if(!config)
     {
-    const env = fs.readFileSync('.env').toString().split(toolbox.filesystem.eol);
-    if(env.length)
-      env.map((item,index) => 
-      {
-        let [i, value] = item.split('=');
-        if(['DB_CONNECTION','DB_HOST','DB_PORT','DB_DATABASE','DB_USERNAME','DB_PASSWORD'].indexOf(i) != -1)
-        {
-          config.set(i, strings.trim(value));
-        }
-      });
-    }catch(e)
-    {
-      error(`Please create the .env file`);
       return false;
-    }
-
-    await delay(500);
-    
-    if(config.get('DB_CONNECTION') != 'mysql')
-    {
-      error(`Database mysql in .env file not configured ['DB_CONNECTION']`);
-      return false; 
-    }
-
-    switch (true) 
-    {
-      case config.has('DB_CONNECTION'):
-      case config.has('DB_HOST'):
-      case config.has('DB_PORT'):
-      case config.has('DB_DATABASE'):
-      case config.has('DB_USERNAME'):
-      case config.has('DB_PASSWORD'):
-        //console.log('ok')
-        break;
-    
-      default:
-        error(`Database in .env file not configured ['DB_CONNECTION','DB_HOST','DB_PORT','DB_DATABASE','DB_USERNAME','DB_PASSWORD']`);
-        break;
     }
 
     //====================================================================================================
@@ -159,45 +121,52 @@ module.exports = {
     //==================================== CONNECTION MYSQL ==============================================
     //====================================================================================================
 
-    try 
+    resultsQuery = await toolbox.mysqlConnection(table, config.get('DB_HOST'),config.get('DB_USERNAME'), config.get('DB_PASSWORD'), config.get('DB_DATABASE'));
+
+    if(!resultsQuery)
     {
-      let connection = await mysql.createConnection({
-        host     : config.get('DB_HOST'),
-        user     : config.get('DB_USERNAME'),
-        password : config.get('DB_PASSWORD'),
-        database : config.get('DB_DATABASE')
-      });
-      
-      await connection.connect();
-      //TEST CONNECTION
-      await connection.query('DESCRIBE ' + table, async function (errors, results, fields) {
-        //if (errors) throw console.error(errors);
-        if (errors) 
-        { 
-          error(`Mysql connection failed` + JSON.stringify(errors));
-          return false;
-        }
-        success(`Successful Mysql Connection DESCRIBE `+table);
-        //console.log(results);
-        if(results.length)
-        {
-          await results.forEach(async (item,i) => 
-          { 
-            //console.log(item)
-            resultsQuery[strings.trim(i)] = item;
-          });
-        }
-      });
-      await delay();
-      await delay();
-      resultsQuery = resultsQuery.splice(1,resultsQuery.length);
-      connection.end();
-    }catch(e)
-    {
-      error(e);
-      //error(`Mysql connection failed`);
       return false;
     }
+    // try 
+    // {
+      
+    //   let connection = await mysql.createConnection({
+    //     host     : config.get('DB_HOST'),
+    //     user     : config.get('DB_USERNAME'),
+    //     password : config.get('DB_PASSWORD'),
+    //     database : config.get('DB_DATABASE')
+    //   });
+      
+    //   await connection.connect();
+    //   //TEST CONNECTION
+    //   await connection.query('DESCRIBE ' + table, async function (errors, results, fields) {
+    //     //if (errors) throw console.error(errors);
+    //     if (errors) 
+    //     { 
+    //       error(`Mysql connection failed` + JSON.stringify(errors));
+    //       return false;
+    //     }
+    //     success(`Successful Mysql Connection DESCRIBE `+table);
+    //     //console.log(results);
+    //     if(results.length)
+    //     {
+    //       await results.forEach(async (item,i) => 
+    //       { 
+    //         //console.log(item)
+    //         resultsQuery[strings.trim(i)] = item;
+    //       });
+    //     }
+    //   });
+    //   await delay();
+    //   await delay();
+    //   resultsQuery = resultsQuery.splice(1,resultsQuery.length);
+    //   connection.end();
+    // }catch(e)
+    // {
+    //   error(e);
+    //   //error(`Mysql connection failed`);
+    //   return false;
+    // }
     //====================================================================================================
     //====================================================================================================
     //====================================================================================================

@@ -11,6 +11,7 @@ async function run (argv) {
     .plugins('./node_modules', { matching: 'grao-*', hidden: true })
     .help() // provides default for help, h, --help, -h
     .version() // provides default for version, v, --version, -v
+    .checkForUpdates(1) 
     .create()
 
   // and run it

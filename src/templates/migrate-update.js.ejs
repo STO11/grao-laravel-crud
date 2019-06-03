@@ -1,0 +1,38 @@
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class Update<%= props.nameCapitalize _%>Table extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table('<%= props.table _%>', function (Blueprint $table) {
+            <% for(let p in props.cmdMigration) { _%>
+            $table-><%= props.cmdMigration[p] _%>('<%= p _%>')->change(); 
+            <% } _%>
+            // $table->text('test')->after('email'); //add colunm
+            // $table->string('test'); //change type
+            // $table->string('test')->nullable()->change(); //change for nullable
+            // $table->renameColumn('test', 'test2'); //remane colunm
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('<%= props.table _%>', function (Blueprint $table) {
+            // $table->dropColumn('test')->change(); //drop column
+        });
+    }
+}
