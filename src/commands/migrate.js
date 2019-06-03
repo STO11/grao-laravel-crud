@@ -104,9 +104,21 @@ module.exports = {
         }
         //let migrateCreate = await 
         toolbox.system.run(`php artisan migrate --path=database/migrations/crudconfig/create/${table}`, { trim: true })
-        .then(() => {})
+        .then((i) => {
+          success(i)
+        })
         .catch((e) => {
-          error('Check if table exist.');
+          //error('Check if table exist.');
+          console.log(e);
+        });
+
+        toolbox.system.run(`php artisan migrate --path=database/migrations/crudconfig/update/${table}`, { trim: true })
+        .then((i) => {
+          success(i)
+        })
+        .catch((e) => {
+          //error('Check if table exist.');
+          console.log(e);
         });
         //console.log(migrateCreate);
       }catch(e)
@@ -198,27 +210,25 @@ module.exports = {
 
     let newdate = year + "_" + month + "_" + day+'_'+hour+minutes+seconds;
 
-    const deleteFiles = (directory) => fs.readdir(directory, (err, files) => {
-        if (err) throw err;
-        for (const file of files) {
-          fs.unlink(path.join(directory, file), async (err) => {
-            if (err) throw err;
-            try{
-              //> NUL
-              toolbox.system.run(`php artisan migrate:rollback --path=${path.join(directory)}`, { trim: true })
-              .then(() => {
-
-              }).catch((e) => {
-                //console.log(e)
+    const deleteFiles = async (directory) => {
+    if(fs.existsSync(directory)) {
+      await toolbox.system.run(`php artisan migrate:rollback --path=${path.join(directory)}`, { trim: true })
+      .then(async (i) => {
+        console.log(i)
+      }).catch((e) => {
+        //console.log(e)
+      });
+      await toolbox.delay();
+      fs.readdir(directory, async (err, files) => {
+          if (err) throw err;
+          for (const file of files) {
+              await fs.unlink(path.join(directory, file), async (err) => {
+                if (err) throw err;
               });
-            }catch(e)
-            {
-              console.log(e)
-            }
-          });
-        }
-    }); 
-
+          }
+        }); 
+      }
+    }
     await deleteFiles(`database/migrations/crudconfig/create/${table}`);
     await deleteFiles(`database/migrations/crudconfig/update/${table}`);
 
