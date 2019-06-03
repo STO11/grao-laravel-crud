@@ -93,7 +93,7 @@ module.exports = {
       if(!table)
       {
 
-        let files = await getAllFiles('./database/migrations/crudconfig/create');
+        let files = await getAllFiles('./database/migrations/crudconfig/update');
         if(files)
         {
           files.map(async (path,i) => {
@@ -102,8 +102,8 @@ module.exports = {
             info(migrateCreate);
           })
         }
-        
-        files = await getAllFiles('./database/migrations/crudconfig/update');
+
+        files = await getAllFiles('./database/migrations/crudconfig/create');
         if(files)
         {
           files.map(async (path,i) => {
