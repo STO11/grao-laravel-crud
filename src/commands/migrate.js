@@ -198,18 +198,48 @@ module.exports = {
 
     if(parameters.options.rollback)
     {
-
       if(!table)
       { 
         error(`Not found parameter table Example: grao migrate update table_name`);
         return false;
       }
 
-      let migrateUpdate = await toolbox.system.run(`php artisan migrate:rollback --path=database/migrations/crudconfig/update/${table}`, { trim: true });
-      console.log(migrateUpdate);
-      let migrateCreate = await toolbox.system.run(`php artisan migrate:rollback --path=database/migrations/crudconfig/create/${table}`, { trim: true });
+      
+      let files = await getAllFiles('./database/migrations/crudconfig/update');
+      if(files)
+      {
+        files.sort().map(async (path,i) => {
+          toolbox.system.run(`php artisan migrate:rollback --path=database/migrations/crudconfig/update/${table}`, { trim: true })
+          .then( async (dados) => {
+            if(dados.match(/^Rolling back\:(.*)$/gm))
+            {
+              success(dados.match(/^Rolling back\:(.*)$/gm)[0]);
+              success(dados.match(/^Rolled back\:(.*)$/gm)[0]);  
+            }
+          });
+        });
+      }
 
-      console.log(migrateCreate);
+      await toolbox.delay();
+      await toolbox.delay();
+      await toolbox.delay();
+      await toolbox.delay();
+
+      filesc = await getAllFiles('./database/migrations/crudconfig/create');
+      if(filesc)
+      {
+          filesc.sort().map(async (path,i) => {
+            toolbox.system.run(`php artisan migrate:rollback --path=database/migrations/crudconfig/create/${table}`, { trim: true })
+            .then((dados) => {
+              
+              if(dados.match(/^Rolling back\:(.*)$/gm))
+              {
+                success(dados.match(/^Rolling back\:(.*)$/gm)[0]);
+                success(dados.match(/^Rolled back\:(.*)$/gm)[0]);
+              }
+            });
+          });
+      }
       return true;
     }
 
@@ -224,7 +254,7 @@ module.exports = {
 
       let migrateUpdate = await toolbox.system.run(`php artisan migrate:rollback --path=database/migrations/crudconfig/update/${table}`, { trim: true });
       migrateUpdate = await toolbox.system.run(`php artisan migrate --path=database/migrations/crudconfig/update/${table}`, { trim: true });
-      console.log(migrateUpdate);
+      success(migrateUpdate);
       
       return true;
     }
