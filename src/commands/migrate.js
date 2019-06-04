@@ -56,6 +56,7 @@ module.exports = {
 
     const getAllFiles = dir =>
     fs.readdirSync(dir).reduce((files, file) => {
+      //const name = path.join(dir, file);
       const name = path.join(dir, file);
       const isDirectory = fs.statSync(name).isDirectory();
       return isDirectory ? [...files, ...getAllFiles(name)] : [...files, name];
@@ -69,21 +70,42 @@ module.exports = {
         if(files)
         {
           files.map(async (path,i) => {
-            let migrateCreate = await toolbox.system.run(`php artisan migrate --path=${path}`, { trim: true });
+            let p = path.split('/');
+            delete p[p.length - 1];
+            path = p.join('/');
+            toolbox.system.run(`php artisan migrate --path=${path}`, { trim: true })
+            .then( async (dados) => {
+                success(dados);
+            });
             //await toolbox.delay();
-            info(migrateCreate);
+            
           })
         }
+
+        await toolbox.delay();
+        await toolbox.delay();
+        await toolbox.delay();
 
         files = await getAllFiles('./database/migrations/crudconfig/update');
         if(files)
         {
           files.map(async (path,i) => {
-            let migrateCreate = await toolbox.system.run(`php artisan migrate --path=${path}`, { trim: true });
+            //console.log(path);
+            let p = path.split('/');
+            delete p[p.length - 1];
+            path = p.join('/');
+            //console.log(path)
+            toolbox.system.run(`php artisan migrate --path=${path}`, { trim: true })
+            .then((dados) => {
+                success(dados);
+            });
             //await toolbox.delay();
-            info(migrateCreate);
+            
           })
         }
+
+        //await toolbox.delay();
+       
         return true;
       }
     }
@@ -92,26 +114,52 @@ module.exports = {
     {
       if(!table)
       {
-
         let files = await getAllFiles('./database/migrations/crudconfig/update');
         if(files)
         {
-          files.map(async (path,i) => {
-            let migrateCreate = await toolbox.system.run(`php artisan migrate:rollback --path=${path}`, { trim: true });
+          files.sort().map(async (path,i) => {
+            let p = path.split('/');
+            delete p[p.length - 1];
+            path = p.join('/');
+            let migrateCreate = await toolbox.system.run(`php artisan migrate:rollback --path=${path}`, { trim: true })
+            .then(async (dados) => {
+              if(dados.match(/^Rolling back\:(.*)$/gm))
+              {
+                success(dados.match(/^Rolling back\:(.*)$/gm)[0]);
+                success(dados.match(/^Rolled back\:(.*)$/gm)[0]);
+              }
+            });
            // await toolbox.delay();
-            info(migrateCreate);
+            
           })
         }
+
+        await toolbox.delay();
+        await toolbox.delay();
+        await toolbox.delay();
+
 
         files = await getAllFiles('./database/migrations/crudconfig/create');
         if(files)
         {
-          files.map(async (path,i) => {
-            let migrateCreate = await toolbox.system.run(`php artisan migrate:rollback --path=${path}`, { trim: true });
-           // await toolbox.delay();
-            info(migrateCreate);
+          files.sort().map(async (path,i) => {
+            let p = path.split('/');
+            delete p[p.length - 1];
+            path = p.join('/');
+            toolbox.system.run(`php artisan migrate:rollback --path=${path}`, { trim: true })
+            .then((dados) => {
+              
+              if(dados.match(/^Rolling back\:(.*)$/gm))
+              {
+                success(dados.match(/^Rolling back\:(.*)$/gm)[0]);
+                success(dados.match(/^Rolled back\:(.*)$/gm)[0]);
+              }
+            });
+            // await toolbox.delay();
           })
         }
+
+       
         return true;
       }
     }
@@ -126,23 +174,25 @@ module.exports = {
           return false;
         }
         //let migrateCreate = await 
-        toolbox.system.run(`php artisan migrate --path=database/migrations/crudconfig/create/${table}`, { trim: true })
-        .then((i) => {
-          success(i)
+          toolbox.system.run(`php artisan migrate --path=database/migrations/crudconfig/create/${table}`, { trim: true })
+          .then((i) => {
+            success(i)
+           toolbox.system.run(`php artisan migrate --path=database/migrations/crudconfig/update/${table}`, { trim: true })
+          .then((i) => {
+            success(i)
+          })
+          .catch((e) => {
+            //error('Check if table exist.');
+            console.log(e);
+          });
+
         })
         .catch((e) => {
           //error('Check if table exist.');
           console.log(e);
         });
 
-        toolbox.system.run(`php artisan migrate --path=database/migrations/crudconfig/update/${table}`, { trim: true })
-        .then((i) => {
-          success(i)
-        })
-        .catch((e) => {
-          //error('Check if table exist.');
-          console.log(e);
-        });
+       
         //console.log(migrateCreate);
       }catch(e)
       {

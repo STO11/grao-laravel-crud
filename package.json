@@ -1,10 +1,16 @@
 {
   "name": "grao-laravel-crud",
-  "author": {"name": "Suelton de Souza Lima", "email": "sueltonlima@gmail.com"},
+  "author": {
+    "name": "Suelton de Souza Lima",
+    "email": "sueltonlima@gmail.com"
+  },
   "version": "1.0.21",
   "description": "Generator Controler, Model, View, Routes for Laravel via CLI",
   "private": false,
-  "repository": {"type": "git", "url": "https://github.com/STO11/grao-laravel-grud"},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/STO11/grao-laravel-grud"
+  },
   "bin": {
     "grao": "bin/grao"
   },
@@ -26,13 +32,13 @@
   "license": "MIT",
   "dependencies": {
     "gluegun": "^3.3.0",
-    "mysql":"2.17.1"
+    "mysql": "2.17.1"
   },
   "devDependencies": {
     "standard": "^12.0.1",
     "prettier": "^1.12.1",
     "jest": "^23.6.0",
-    "mysql":"2.17.1"
+    "mysql": "2.17.1"
   },
   "jest": {
     "testEnvironment": "node"
