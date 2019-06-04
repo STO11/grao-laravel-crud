@@ -77,11 +77,10 @@ module.exports = {
             .then( async (dados) => {
                 success(dados);
             });
-            //await toolbox.delay();
-            
           })
         }
 
+        await toolbox.delay();
         await toolbox.delay();
         await toolbox.delay();
         await toolbox.delay();
@@ -98,14 +97,10 @@ module.exports = {
             toolbox.system.run(`php artisan migrate --path=${path}`, { trim: true })
             .then((dados) => {
                 success(dados);
-            });
-            //await toolbox.delay();
-            
-          })
+            });      
+          });
         }
-
-        //await toolbox.delay();
-       
+      
         return true;
       }
     }
@@ -137,7 +132,7 @@ module.exports = {
         await toolbox.delay();
         await toolbox.delay();
         await toolbox.delay();
-
+        await toolbox.delay();
 
         files = await getAllFiles('./database/migrations/crudconfig/create');
         if(files)
