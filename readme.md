@@ -37,7 +37,7 @@ $ npm i -g grao-laravel-crud
 > The file inside `database/migrations/create` will create the tables in the database to be used in the rollback and creation.
 > The update file inside `database/migrations/update` will only serve to modify the database table. `--update`
 
->To generate these files use the command below:
+> To generate these files use the command below:
 
 ```sh
 
@@ -51,7 +51,7 @@ $ grao migrate table_name --fields="field1:string, field2:string, field3:text, f
 | `table_name` | The name of the database table |
 | `--fields` | Name the fields with their types separated by a colon. |
 
-> Go to the file do the necessary and then run the commands below to create the table in the database:
+> Go to the file make the necessary modifications and then execute the commands below to create the table in the database:
 
 ```sh
 
@@ -100,6 +100,18 @@ $ grao migrate --rollback
 
 # Usage (CLI) Generate
 ----------------------------------------------------
+
+> This command generates the Controllers, Model and Views files. When reusing the same table_name it overwrites the previous file. We use the template files created in the project in the grao-config folder.
+
+> Files in the config folder.
+
+| files | description |
+| ------ | ------ |
+| `controller.js.ejs` | Model for modifiable Controller generation for laravel |
+| `model.js.ejs` | Model for modifiable Models generation for laravel |
+| `routes.js.ejs` | Model for modifiable Routes generation for laravel |
+| `index.js.ejs` | Template for generating list page modifiable for laravel |
+| `form.js.ejs` | Template for form generation modifiable for laravel |
 
 > Before running the command, the table in the database should exist.
 
