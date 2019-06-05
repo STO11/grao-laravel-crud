@@ -41,7 +41,7 @@ $ npm i -g grao-laravel-crud
 
 ```sh
 
-$ grao migrate table_name --fields="field1:string, field2:string, field3:text, field4:int, field1:biginteger"
+$ grao migrate table_name --fields="field1:string, field2:string, field3:text, field4:int, field1:bigInteger"
 
 ```
 > obs: `The file already comes with the autoincrement id`.
