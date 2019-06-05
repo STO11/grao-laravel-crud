@@ -4,7 +4,7 @@
     "name": "Suelton de Souza Lima",
     "email": "sueltonlima@gmail.com"
   },
-  "version": "1.0.25",
+  "version": "1.0.26",
   "description": "Generator Controler, Model, View, Routes for Laravel via CLI",
   "private": false,
   "repository": {
