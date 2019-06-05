@@ -101,7 +101,9 @@ $ grao migrate --rollback
 ----------------------------------------------------
 
 > Before running the command, the table in the database should exist.
+
 > IMPORTANT: This module only uses MYSQL connection, reading the .env file.
+
 > COMMAND:
 
 ```sh
