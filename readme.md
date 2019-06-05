@@ -1,4 +1,4 @@
-# Grão CLI (Crud para Laravel)
+# Grão CLI (Crud for Laravel)
 
 A CLI for creating basic files for Laravel
 
