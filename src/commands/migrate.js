@@ -294,7 +294,7 @@ module.exports = {
       //directory: './grao-config/'
     });
 
-    success(`File migrate create database/migrations/create/${table}/${newdate}_create_${table}_table.php`);
+    //success(`File migrate create database/migrations/create/${table}/${newdate}_create_${table}_table.php`);
 
     await generate({
       template: 'migrate-update.js.ejs',
