@@ -18,10 +18,10 @@ module.exports = {
 
 
     const checkPlural = (s) => {
-      if(strings.pluralize.isPlural(s))
-        s = s.slice(0, -1) 
-        //s = strings.singular(s)
-        return s
+      if (strings.pluralize.isPlural(s))
+        s = s.slice(0, -1)
+      //s = strings.singular(s)
+      return s
     };
 
     const fs = require('fs');
@@ -32,10 +32,9 @@ module.exports = {
     let resultsQuery = [];
     //let config = new Map();
 
-    
+
     let space = parameters.second;
-    if(!space)
-    {
+    if (!space) {
       info(`grao g table_name namespace`);
       error(`Please pass the namespace`);
       return false;
@@ -45,8 +44,7 @@ module.exports = {
     //==================================== FILE .ENV CONFIG MYSQL ===========================================
     //====================================================================================================
     let config = await toolbox.getEnv();
-    if(!config)
-    {
+    if (!config) {
       return false;
     }
 
@@ -59,52 +57,51 @@ module.exports = {
     //====================================================================================================
 
     let dir = './grao-config';
-    if (!fs.existsSync(dir))
-    {
+    if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir);
-      fs.readFile(__dirname+'/../templates/index.js.ejs', function(err, data) {
+      fs.readFile(__dirname + '/../templates/index.js.ejs', function (err, data) {
         if (err) {
           throw err;
         }
-        fs.writeFile('./grao-config/index.js.ejs', data,function(err, data) {
+        fs.writeFile('./grao-config/index.js.ejs', data, function (err, data) {
           if (err) {
             throw err;
           }
         });
       });
-      fs.readFile(__dirname+'/../templates/form.js.ejs', function(err, data) {
+      fs.readFile(__dirname + '/../templates/form.js.ejs', function (err, data) {
         if (err) {
           throw err;
         }
-        fs.writeFile('./grao-config/form.js.ejs', data,function(err, data) {
-          if (err) {
-            throw err;
-          }
-        });
-      });
-
-      fs.readFile(__dirname+'/../templates/controller.js.ejs', function(err, data) {
-        if (err) {
-          throw err;
-        }
-        fs.writeFile('./grao-config/controller.js.ejs', data,function(err, data) {
+        fs.writeFile('./grao-config/form.js.ejs', data, function (err, data) {
           if (err) {
             throw err;
           }
         });
       });
 
-      fs.readFile(__dirname+'/../templates/model.js.ejs', function(err, data) {
+      fs.readFile(__dirname + '/../templates/controller.js.ejs', function (err, data) {
         if (err) {
           throw err;
         }
-        fs.writeFile('./grao-config/model.js.ejs', data,function(err, data) {
+        fs.writeFile('./grao-config/controller.js.ejs', data, function (err, data) {
           if (err) {
             throw err;
           }
         });
       });
-      fs.writeFile('./grao-config/routes.php', '<?php '+toolbox.filesystem.eol,function(err, data) {
+
+      fs.readFile(__dirname + '/../templates/model.js.ejs', function (err, data) {
+        if (err) {
+          throw err;
+        }
+        fs.writeFile('./grao-config/model.js.ejs', data, function (err, data) {
+          if (err) {
+            throw err;
+          }
+        });
+      });
+      fs.writeFile('./grao-config/routes.php', '<?php ' + toolbox.filesystem.eol, function (err, data) {
         if (err) {
           throw err;
         }
@@ -121,22 +118,21 @@ module.exports = {
     //==================================== CONNECTION MYSQL ==============================================
     //====================================================================================================
 
-    resultsQuery = await toolbox.mysqlConnection(table, config.get('DB_HOST'),config.get('DB_USERNAME'), config.get('DB_PASSWORD'), config.get('DB_DATABASE'));
+    resultsQuery = await toolbox.mysqlConnection(table, config.get('DB_HOST'), config.get('DB_USERNAME'), config.get('DB_PASSWORD'), config.get('DB_DATABASE'), config.get('DB_PORT'));
 
-    if(!resultsQuery)
-    {
+    if (!resultsQuery) {
       return false;
     }
     // try 
     // {
-      
+
     //   let connection = await mysql.createConnection({
     //     host     : config.get('DB_HOST'),
     //     user     : config.get('DB_USERNAME'),
     //     password : config.get('DB_PASSWORD'),
     //     database : config.get('DB_DATABASE')
     //   });
-      
+
     //   await connection.connect();
     //   //TEST CONNECTION
     //   await connection.query('DESCRIBE ' + table, async function (errors, results, fields) {
@@ -178,14 +174,13 @@ module.exports = {
 
     let spaceFirst = strings.upperFirst(space);
 
-    if (!fs.existsSync(dir+'/model.js.ejs'))
-    {
+    if (!fs.existsSync(dir + '/model.js.ejs')) {
       await generate({
         template: 'model.js.ejs',
         target: `app/${nameCapitalize}.php`,
         props: { nameCapitalize, name, resultsQuery }
       });
-    }else{
+    } else {
       await generate({
         template: 'model.js.ejs',
         target: `app/${nameCapitalize}.php`,
@@ -196,15 +191,14 @@ module.exports = {
 
     success(`Generated file at app/${nameCapitalize}.php`);
 
-    if (!fs.existsSync(dir+'/controller.js.ejs'))
-    {
+    if (!fs.existsSync(dir + '/controller.js.ejs')) {
       await generate({
         template: 'controller.js.ejs',
         target: `app/Http/Controllers/${spaceFirst}/${nameCapitalize}Controller.php`,
         props: { nameCapitalize, name, spaceFirst, resultsQuery, space }
       });
-    }else{
-      
+    } else {
+
       await generate({
         template: 'controller.js.ejs',
         target: `app/Http/Controllers/${spaceFirst}/${nameCapitalize}Controller.php`,
@@ -216,14 +210,13 @@ module.exports = {
     success(`Generated file app/Http/Controllers/${spaceFirst}/${nameCapitalize}Controller.php`);
 
 
-    if (!fs.existsSync(dir+'/index.js.ejs'))
-    {
+    if (!fs.existsSync(dir + '/index.js.ejs')) {
       await generate({
         template: 'index.js.ejs',
         target: `resources/views/${space}/${name}/index.blade.php`,
         props: { nameCapitalize, name, resultsQuery, space }
       });
-    }else{
+    } else {
       await generate({
         template: 'index.js.ejs',
         target: `resources/views/${space}/${name}/index.blade.php`,
@@ -234,14 +227,13 @@ module.exports = {
 
     success(`Generated file resources/views/${space}/${name}/index.blade.php`);
 
-    if (!fs.existsSync(dir+'/index.js.ejs'))
-    {
+    if (!fs.existsSync(dir + '/index.js.ejs')) {
       await generate({
         template: 'form.js.ejs',
         target: `resources/views/${space}/${name}/form.blade.php`,
         props: { nameCapitalize, name, resultsQuery, space }
       });
-    }else{
+    } else {
       await generate({
         template: 'form.js.ejs',
         target: `resources/views/${space}/${name}/form.blade.php`,
@@ -252,32 +244,32 @@ module.exports = {
 
     success(`Generated file resources/views/${space}/${name}/form.blade.php`);
 
-  
-    let route = ""+toolbox.filesystem.eol+" //========================== "+name+" ================================ "+toolbox.filesystem.eol+"\
-      Route::get('"+name+"', ["+toolbox.filesystem.eol+" \
-        'as'   => '"+space+"."+name+".index',"+toolbox.filesystem.eol+" \
-        'permissao' => '"+space+"."+name+".index',"+toolbox.filesystem.eol+" \
-        'uses' => '"+strings.upperFirst(space)+"\\"+nameCapitalize+"Controller@index',"+toolbox.filesystem.eol+" \
-      ]);"+toolbox.filesystem.eol+" \
-      Route::get('"+name+"/form/{id?}', ["+toolbox.filesystem.eol+" \
-        'as'   => '"+space+"."+name+".form',"+toolbox.filesystem.eol+" \
-        'permissao' => '"+space+"."+name+".form',"+toolbox.filesystem.eol+" \
-        'uses' => '"+strings.upperFirst(space)+"\\"+nameCapitalize+"Controller@form',"+toolbox.filesystem.eol+" \
-      ]);"+toolbox.filesystem.eol+" \
-      Route::post('"+name+"/create', ["+toolbox.filesystem.eol+" \
-        'as'   => '"+space+"."+name+".create',"+toolbox.filesystem.eol+" \
-        'permissao' => '"+space+"."+name+".create',"+toolbox.filesystem.eol+" \
-        'uses' => '"+strings.upperFirst(space)+"\\"+nameCapitalize+"Controller@create',"+toolbox.filesystem.eol+" \
-      ]);"+toolbox.filesystem.eol+" \
-      Route::post('"+name+"/update/{id}', ["+toolbox.filesystem.eol+" \
-        'as'   => '"+space+"."+name+".update',"+toolbox.filesystem.eol+" \
-        'permissao' => '"+space+"."+name+".update',"+toolbox.filesystem.eol+" \
-        'uses' => '"+strings.upperFirst(space)+"\\"+nameCapitalize+"Controller@update',"+toolbox.filesystem.eol+" \
-      ]);"+toolbox.filesystem.eol+" \
-      Route::get('"+name+"/destroy/{id}', ["+toolbox.filesystem.eol+" \
-        'as'   => '"+space+"."+name+".destroy',"+toolbox.filesystem.eol+" \
-        'permissao' => '"+space+"."+name+".destroy',"+toolbox.filesystem.eol+" \
-        'uses' => '"+strings.upperFirst(space)+"\\"+nameCapitalize+"Controller@destroy',"+toolbox.filesystem.eol+" \
+
+    let route = "" + toolbox.filesystem.eol + " //========================== " + name + " ================================ " + toolbox.filesystem.eol + "\
+      Route::get('"+ name + "', [" + toolbox.filesystem.eol + " \
+        'as'   => '"+ space + "." + name + ".index'," + toolbox.filesystem.eol + " \
+        'permissao' => '"+ space + "." + name + ".index'," + toolbox.filesystem.eol + " \
+        'uses' => '"+ strings.upperFirst(space) + "\\" + nameCapitalize + "Controller@index'," + toolbox.filesystem.eol + " \
+      ]);"+ toolbox.filesystem.eol + " \
+      Route::get('"+ name + "/form/{id?}', [" + toolbox.filesystem.eol + " \
+        'as'   => '"+ space + "." + name + ".form'," + toolbox.filesystem.eol + " \
+        'permissao' => '"+ space + "." + name + ".form'," + toolbox.filesystem.eol + " \
+        'uses' => '"+ strings.upperFirst(space) + "\\" + nameCapitalize + "Controller@form'," + toolbox.filesystem.eol + " \
+      ]);"+ toolbox.filesystem.eol + " \
+      Route::post('"+ name + "/create', [" + toolbox.filesystem.eol + " \
+        'as'   => '"+ space + "." + name + ".create'," + toolbox.filesystem.eol + " \
+        'permissao' => '"+ space + "." + name + ".create'," + toolbox.filesystem.eol + " \
+        'uses' => '"+ strings.upperFirst(space) + "\\" + nameCapitalize + "Controller@create'," + toolbox.filesystem.eol + " \
+      ]);"+ toolbox.filesystem.eol + " \
+      Route::post('"+ name + "/update/{id}', [" + toolbox.filesystem.eol + " \
+        'as'   => '"+ space + "." + name + ".update'," + toolbox.filesystem.eol + " \
+        'permissao' => '"+ space + "." + name + ".update'," + toolbox.filesystem.eol + " \
+        'uses' => '"+ strings.upperFirst(space) + "\\" + nameCapitalize + "Controller@update'," + toolbox.filesystem.eol + " \
+      ]);"+ toolbox.filesystem.eol + " \
+      Route::get('"+ name + "/destroy/{id}', [" + toolbox.filesystem.eol + " \
+        'as'   => '"+ space + "." + name + ".destroy'," + toolbox.filesystem.eol + " \
+        'permissao' => '"+ space + "." + name + ".destroy'," + toolbox.filesystem.eol + " \
+        'uses' => '"+ strings.upperFirst(space) + "\\" + nameCapitalize + "Controller@destroy'," + toolbox.filesystem.eol + " \
       ]);";
 
     fs.appendFile('./grao-config/routes.php', route, function (err) {
@@ -285,7 +277,7 @@ module.exports = {
       //console.log('Updated!');
       info(`Update file routes /grao-config/routes.php`);
     });
-  
+
 
     //====================================================================================================
     //====================================================================================================

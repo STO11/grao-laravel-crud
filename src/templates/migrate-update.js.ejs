@@ -15,7 +15,7 @@ class Update<%= props.nameCapitalize _%>Table extends Migration
     {
         Schema::table('<%= props.table _%>', function (Blueprint $table) {
             <% for(let p in props.cmdMigration) { _%>
-            $table-><%= props.cmdMigration[p] _%>('<%= p _%>')->change(); 
+            $table-><%- props.cmdMigration[p] _%>('<%= p _%>')->change(); 
             <% } _%>
             // $table->text('test')->after('email'); //add colunm
             // $table->string('test'); //change type

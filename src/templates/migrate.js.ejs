@@ -16,7 +16,7 @@ class Create<%= props.nameCapitalize _%>Table extends Migration
         Schema::create('<%= props.table _%>', function (Blueprint $table) {
             $table->bigIncrements('id');
         <% for(let p in props.cmdMigration) { _%>
-        $table-><%= props.cmdMigration[p] _%>('<%= p _%>'); 
+        $table-><%- props.cmdMigration[p] _%>('<%= p _%>'); 
         <% } _%>
         $table->timestamps();
             $table->softDeletes();
