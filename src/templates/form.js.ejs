@@ -31,6 +31,24 @@
                     {!! Form::select('<%= res.Field _%>', [], null, ['class' => 'form-control', 'required']) !!}
                 </div>
             <% } _%>
+            <% if(res.Type.indexOf('date') >= 0) { _%>
+                <div class="form-group">
+                    <label for="<%= res.Field _%>"><%= res.Field _%>*</label>
+                    {!! Form::date('<%= res.Field _%>', null, ['class' => 'form-control', 'required']) !!}
+                </div>
+            <% } _%>
+            <% if(res.Type.indexOf('decimal') >= 0 || res.Type.indexOf('float') >= 0 || res.Type.indexOf('double') >= 0) { _%>
+                <div class="form-group">
+                    <label for="<%= res.Field _%>"><%= res.Field _%>*</label>
+                    {!! Form::text('<%= res.Field _%>',null, ['class' => 'form-control', 'required']) !!}
+                </div>
+            <% } _%>
+            <% if(res.Type.indexOf('timestamp') >= 0) { _%>
+                <div class="form-group">
+                    <label for="<%= res.Field _%>"><%= res.Field _%>*</label>
+                    {!! Form::date('<%= res.Field _%>',null, ['class' => 'form-control', 'required']) !!}
+                </div>
+            <% } _%>
     <% }); _%>
         
     @if($id)
