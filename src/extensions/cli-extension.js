@@ -99,22 +99,34 @@ module.exports = toolbox => {
   }
 
 
-
   toolbox.getEnv = async () => {
     try {
-      const env = fs.readFileSync('.env').toString().split(toolbox.filesystem.eol);
-      if (env.length)
-        env.map((item, index) => {
-          let [i, value] = item.split('=');
-          if (['DB_CONNECTION', 'DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD'].indexOf(i) != -1) {
-            config.set(i, strings.trim(value));
-          }
-        });
+
+      const env = require('dotenv').config();
+
+      await config.set('DB_CONNECTION', strings.trim(env.parsed.DB_CONNECTION));
+      await config.set('DB_HOST', strings.trim(env.parsed.DB_HOST));
+      await config.set('DB_PORT', strings.trim(env.parsed.DB_PORT));
+      await config.set('DB_DATABASE', strings.trim(env.parsed.DB_DATABASE));
+      await config.set('DB_USERNAME', strings.trim(env.parsed.DB_USERNAME));
+      await config.set('DB_PASSWORD', strings.trim(env.parsed.DB_PASSWORD));
+
+      // const env = fs.readFileSync('.env').toString().split(toolbox.filesystem.eol);
+      // if (env.length)
+      //   await env.map(async (item, index) => {
+      //     let [i, value] = item.split('=');
+      //     if (['DB_CONNECTION', 'DB_HOST', 'DB_PORT', 'DB_DATABASE', 'DB_USERNAME', 'DB_PASSWORD'].indexOf(i) != -1) {
+      //       await config.set(i, strings.trim(value));
+      //     }
+      //   });
     } catch (e) {
       error(`Please create the .env file`);
       return false;
     }
 
+    await toolbox.delay();
+    await toolbox.delay();
+    await toolbox.delay();
     await toolbox.delay();
 
     if (config.get('DB_CONNECTION') != 'mysql') {

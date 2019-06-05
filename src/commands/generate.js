@@ -6,16 +6,15 @@ module.exports = {
   alias: ['g'],
   run: async toolbox => {
     const {
-      system,
+      //system,
       parameters,
       template: { generate },
       print: { info, error, success },
-      strings,
-      filesystem,
-      template,
-      patching
+      strings
+      // filesystem,
+      // template,
+      // patching
     } = toolbox
-
 
     const checkPlural = (s) => {
       if (strings.pluralize.isPlural(s))
