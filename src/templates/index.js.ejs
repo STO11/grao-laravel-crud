@@ -2,22 +2,22 @@
 <a href="{{ route('<%= props.space _%>.<%= props.name _%>.form') }}">Cadastrar</a>
 <table>
     <thead>
-    <% for (var prop in props.resultsQuery ) { _%>
+    <%_ for (var prop in props.resultsQuery ) { _%>
             <th><%= props.resultsQuery[prop].Field _%></th>
-    <% } _%>
+    <%_ } _%>
         <th>Opções</th>
     </thead>
     <tbody>
     @if($<%= props.name _%>s->count())
         @foreach($<%= props.name _%>s as $<%= props.name _%>)
-            <tr>
-        <% for (var prop in props.resultsQuery ) { _%>
-                <td>{{ $<%= props.name _%>-><%= props.resultsQuery[prop].Field _%> }}</td>
-        <% } _%>
+        <tr>
+            <%_ for (var prop in props.resultsQuery ) { _%>
+            <td>{{ $<%= props.name _%>-><%= props.resultsQuery[prop].Field _%> }}</td>
+            <%_ } _%>
             <td>
-                    <a href="{{ route('<%= props.space _%>.<%= props.name _%>.form', $<%= props.name _%>->id _%>) }}">Alterar</a>
-                    <a href="{{ route('<%= props.space _%>.<%= props.name _%>.destroy', $<%= props.name _%>->id _%>) }}">Excluir</a>
-                </td>
+                <a href="{{ route('<%= props.space _%>.<%= props.name _%>.form', $<%= props.name _%>->id _%>) }}">Alterar</a>
+                <a href="{{ route('<%= props.space _%>.<%= props.name _%>.destroy', $<%= props.name _%>->id _%>) }}">Excluir</a>
+            </td>
         </tr>
         @endforeach
     @endif

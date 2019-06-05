@@ -26,6 +26,8 @@ $ npm i -g grao-laravel-crud
 
   - Managing migrations by commands.
   - Ease of creating and updating migrations by CLI.
+  - Fix identation in pages.
+  - Fix load .env in Windows.
 
 ----------------------------------------------------
 # Usage (CLI) Migrations
