@@ -67,9 +67,9 @@ module.exports = {
         let files = await getAllFiles('./database/migrations/create');
         if (files) {
           files.map(async (path, i) => {
-            let p = path.split('/');
+            let p = path.split(toolbox.filesystem.separator);
             delete p[p.length - 1];
-            path = p.join('/');
+            path = p.join(toolbox.filesystem.separator);
             toolbox.system.run(`php artisan migrate --path=${path}`, { trim: true })
               .then(async (dados) => {
                 success(dados);
@@ -86,9 +86,9 @@ module.exports = {
         if (files) {
           files.map(async (path, i) => {
             //console.log(path);
-            let p = path.split('/');
+            let p = path.split(toolbox.filesystem.separator);
             delete p[p.length - 1];
-            path = p.join('/');
+            path = p.join(toolbox.filesystem.separator);
             //console.log(path)
             toolbox.system.run(`php artisan migrate --path=${path}`, { trim: true })
               .then((dados) => {
@@ -112,9 +112,9 @@ module.exports = {
         let files = await getAllFiles('./database/migrations/update');
         if (files) {
           files.sort().map(async (path, i) => {
-            let p = path.split('/');
+            let p = path.split(toolbox.filesystem.separator);
             delete p[p.length - 1];
-            path = p.join('/');
+            path = p.join(toolbox.filesystem.separator);
             let migrateCreate = await toolbox.system.run(`php artisan migrate:rollback --path=${path}`, { trim: true })
               .then(async (dados) => {
                 if (dados.match(/^Rolling back\:(.*)$/gm)) {
@@ -133,9 +133,9 @@ module.exports = {
         files = await getAllFiles('./database/migrations/create');
         if (files) {
           files.sort().map(async (path, i) => {
-            let p = path.split('/');
+            let p = path.split(toolbox.filesystem.separator);
             delete p[p.length - 1];
-            path = p.join('/');
+            path = p.join(toolbox.filesystem.separator);
             toolbox.system.run(`php artisan migrate:rollback --path=${path}`, { trim: true })
               .then((dados) => {
                 if (dados.match(/^Rolling back\:(.*)$/gm)) {
@@ -198,7 +198,7 @@ module.exports = {
         let filesUpRoll = await getAllFiles('./database/migrations/update/' + table);
         if (filesRoll) {
           filesRoll.sort().map(async (path, i) => {
-            let p = path.split('/');
+            let p = path.split(toolbox.filesystem.separator);
             let mi = p[p.length - 1].replace('.php', '');
             await toolbox.mysqlQuery('delete from migrations where migration = "' + mi + '"', config.get('DB_HOST'), config.get('DB_USERNAME'), config.get('DB_PASSWORD'), config.get('DB_DATABASE'), config.get('DB_PORT'));
             await toolbox.mysqlQuery('SET FOREIGN_KEY_CHECKS = 0', config.get('DB_HOST'), config.get('DB_USERNAME'), config.get('DB_PASSWORD'), config.get('DB_DATABASE'), config.get('DB_PORT'));
@@ -212,7 +212,7 @@ module.exports = {
         }
         if (filesUpRoll) {
           filesUpRoll.sort().map(async (path, i) => {
-            let p = path.split('/');
+            let p = path.split(toolbox.filesystem.separator);
             let mi = p[p.length - 1].replace('.php', '');
             await toolbox.mysqlQuery('delete from migrations where migration = "' + mi + '"', config.get('DB_HOST'), config.get('DB_USERNAME'), config.get('DB_PASSWORD'), config.get('DB_DATABASE'), config.get('DB_PORT'));
             success(`Rolling back: ` + mi);
@@ -239,7 +239,7 @@ module.exports = {
       let filesUpRoll = await getAllFiles('./database/migrations/update/' + table);
       if (filesUpRoll) {
         filesUpRoll.sort().map(async (path, i) => {
-          let p = path.split('/');
+          let p = path.split(toolbox.filesystem.separator);
           let mi = p[p.length - 1].replace('.php', '');
           await toolbox.mysqlQuery('delete from migrations where migration = "' + mi + '"', config.get('DB_HOST'), config.get('DB_USERNAME'), config.get('DB_PASSWORD'), config.get('DB_DATABASE'), config.get('DB_PORT'));
           success(`Rolling back: ` + mi);
@@ -309,7 +309,7 @@ module.exports = {
         fs.readdir(directory, async (err, files) => {
           if (err) throw err;
           for (const file of files) {
-            let p = file.split('/');
+            let p = file.split(toolbox.filesystem.separator);
             let mi = p[p.length - 1].replace('.php', '');
             await toolbox.mysqlQuery('delete from migrations where migration = "' + mi + '"', config.get('DB_HOST'), config.get('DB_USERNAME'), config.get('DB_PASSWORD'), config.get('DB_DATABASE'), config.get('DB_PORT'));
             await fs.unlink(path.join(directory, file), async (err) => {

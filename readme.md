@@ -28,6 +28,7 @@ $ npm i -g grao-laravel-crud
   - Ease of creating and updating migrations by CLI.
   - Fix identation in pages.
   - Fix load .env in Windows.
+  - Fix migrations in Windows.
 
 ----------------------------------------------------
 # Usage (CLI) Migrations
