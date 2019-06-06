@@ -99,6 +99,15 @@ module.exports = {
                 throw err;
                 }
             });
+
+            let path = '{'+toolbox.filesystem.eol+'\
+            "model":"app", '+toolbox.filesystem.eol+'\
+            "views":"resources/views" '+toolbox.filesystem.eol+'\}';
+            fs.writeFile('./grao-config/path.config.json', path, function (err, data) {
+                if (err) {
+                throw err;
+                }
+            });
         }
         success('Successfully config reset');
         });

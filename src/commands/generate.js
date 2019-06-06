@@ -105,6 +105,16 @@ module.exports = {
           throw err;
         }
       });
+
+      let path = '{'+toolbox.filesystem.eol+'\
+      "model":"app", '+toolbox.filesystem.eol+'\
+      "views":"resources/views" '+toolbox.filesystem.eol+'\
+      }';
+      fs.writeFile('./grao-config/path.config.json', path, function (err, data) {
+        if (err) {
+          throw err;
+        }
+      });
     }
 
 
@@ -118,10 +128,10 @@ module.exports = {
     //====================================================================================================
 
     resultsQuery = await toolbox.mysqlConnection(table, config.get('DB_HOST'), config.get('DB_USERNAME'), config.get('DB_PASSWORD'), config.get('DB_DATABASE'), config.get('DB_PORT'));
-
     if (!resultsQuery) {
       return false;
     }
+
     // try 
     // {
 
@@ -173,19 +183,39 @@ module.exports = {
 
     let spaceFirst = strings.upperFirst(space);
 
+    try{
+      var pathConfig = fs.readFileSync(dir +'/path.config.json').toString();
+      pathConfig = JSON.parse(pathConfig);    
+      var nameModelSpace =  strings.upperFirst(pathConfig.model.replace('/','\\'));
+    }catch(e){
+      error('File path.config.json not found!')
+      return false;
+    }
+
     if (!fs.existsSync(dir + '/model.js.ejs')) {
       await generate({
         template: 'model.js.ejs',
         target: `app/${nameCapitalize}.php`,
-        props: { nameCapitalize, name, resultsQuery }
+        props: { nameCapitalize, name, resultsQuery, nameModelSpace }
       });
     } else {
-      await generate({
-        template: 'model.js.ejs',
-        target: `app/${nameCapitalize}.php`,
-        props: { nameCapitalize, name, resultsQuery },
-        directory: './grao-config/'
-      });
+
+      if(pathConfig.model)
+      {
+        await generate({
+          template: 'model.js.ejs',
+          target: `${pathConfig.model}/${nameCapitalize}.php`,
+          props: { nameCapitalize, name, resultsQuery, space, nameModelSpace },
+          directory: './grao-config/'
+        });
+      }else{
+        await generate({
+          template: 'model.js.ejs',
+          target: `app/${nameCapitalize}.php`,
+          props: { nameCapitalize, name, resultsQuery, space, spaceFirst },
+          directory: './grao-config/'
+        });
+      }
     }
 
     success(`Generated file at app/${nameCapitalize}.php`);
@@ -194,14 +224,13 @@ module.exports = {
       await generate({
         template: 'controller.js.ejs',
         target: `app/Http/Controllers/${spaceFirst}/${nameCapitalize}Controller.php`,
-        props: { nameCapitalize, name, spaceFirst, resultsQuery, space }
+        props: { nameCapitalize, name, spaceFirst, resultsQuery, space, nameModelSpace }
       });
     } else {
-
       await generate({
         template: 'controller.js.ejs',
         target: `app/Http/Controllers/${spaceFirst}/${nameCapitalize}Controller.php`,
-        props: { nameCapitalize, name, resultsQuery, spaceFirst, space },
+        props: { nameCapitalize, name, resultsQuery, spaceFirst, space, nameModelSpace },
         directory: './grao-config/'
       });
     }
@@ -213,32 +242,52 @@ module.exports = {
       await generate({
         template: 'index.js.ejs',
         target: `resources/views/${space}/${name}/index.blade.php`,
-        props: { nameCapitalize, name, resultsQuery, space }
+        props: { nameCapitalize, name, resultsQuery, space, spaceFirst }
       });
     } else {
-      await generate({
-        template: 'index.js.ejs',
-        target: `resources/views/${space}/${name}/index.blade.php`,
-        props: { nameCapitalize, name, resultsQuery, space },
-        directory: './grao-config/'
-      });
+      if(pathConfig.views)
+      {
+        await generate({
+          template: 'index.js.ejs',
+          target: `${pathConfig.views}/${space}/${name}/index.blade.php`,
+          props: { nameCapitalize, name, resultsQuery, space, spaceFirst },
+          directory: './grao-config/'
+        });
+      }else{
+        await generate({
+          template: 'index.js.ejs',
+          target: `resources/views/${space}/${name}/index.blade.php`,
+          props: { nameCapitalize, name, resultsQuery, space, spaceFirst },
+          directory: './grao-config/'
+        });
+      }
     }
 
     success(`Generated file resources/views/${space}/${name}/index.blade.php`);
 
-    if (!fs.existsSync(dir + '/index.js.ejs')) {
+    if (!fs.existsSync(dir + '/form.js.ejs')) {
       await generate({
         template: 'form.js.ejs',
         target: `resources/views/${space}/${name}/form.blade.php`,
         props: { nameCapitalize, name, resultsQuery, space }
       });
     } else {
-      await generate({
-        template: 'form.js.ejs',
-        target: `resources/views/${space}/${name}/form.blade.php`,
-        props: { nameCapitalize, name, resultsQuery, space },
-        directory: './grao-config/'
-      });
+      if(pathConfig.views)
+      {
+        await generate({
+          template: 'form.js.ejs',
+          target: `${pathConfig.views}/${space}/${name}/form.blade.php`,
+          props: { nameCapitalize, name, resultsQuery, space },
+          directory: './grao-config/'
+        });
+      }else{
+        await generate({
+          template: 'form.js.ejs',
+          target: `resources/views/${space}/${name}/form.blade.php`,
+          props: { nameCapitalize, name, resultsQuery, space },
+          directory: './grao-config/'
+        });
+      }
     }
 
     success(`Generated file resources/views/${space}/${name}/form.blade.php`);
