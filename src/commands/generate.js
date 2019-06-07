@@ -189,7 +189,7 @@ module.exports = {
       var nameModelSpace =  strings.upperFirst(pathConfig.model.replace('/','\\'));
     }catch(e){
       error('File path.config.json not found!')
-      return false;
+      //return false;
     }
 
     if (!fs.existsSync(dir + '/model.js.ejs')) {
