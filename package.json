@@ -4,7 +4,7 @@
     "name": "Suelton de Souza Lima",
     "email": "sueltonlima@gmail.com"
   },
-  "version": "1.0.39",
+  "version": "1.0.40",
   "description": "Generator Migrations, Controler, Model, View, Routes for Laravel via CLI",
   "private": false,
   "repository": {
@@ -77,6 +77,7 @@
     "web",
     "web laravel create",
     "migrations",
-    "php artisan migrations"
+    "php artisan migrations",
+    "php crud"
   ]
 }
