@@ -46,7 +46,7 @@ $ npm i -g grao-laravel-crud
 | `model.js.ejs` | Model for modifiable Models generation for laravel |
 | `routes.js.ejs` | Model for modifiable Routes generation for laravel |
 | `index.js.ejs` | Template for generating list page modifiable for laravel |
-| `form.js.ejs` | Template for form generation modifiable for laravel |
+| `edit.js.ejs` | Template for form generation modifiable for laravel |
 
 > Before running the command, the table in the database should exist.
 

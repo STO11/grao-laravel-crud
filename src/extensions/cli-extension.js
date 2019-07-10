@@ -44,7 +44,8 @@ module.exports = toolbox => {
         if (results.length) {
           await results.forEach(async (item, i) => {
             //console.log(item)
-            resultsQuery[strings.trim(i)] = item;
+            if(item.Field != 'created_at' && item.Field != 'updated_at' && item.Field != 'deleted_at')
+              resultsQuery[strings.trim(i)] = item;
           });
         }
       });

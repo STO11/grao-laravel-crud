@@ -62,11 +62,22 @@ module.exports = {
                 }
                 });
             });
-            fs.readFile(__dirname+'/../templates/form.js.ejs', function(err, data) {
+            fs.readFile(__dirname+'/../templates/edit.js.ejs', function(err, data) {
                 if (err) {
                 throw err;
                 }
-                fs.writeFile('./grao-config/form.js.ejs', data,function(err, data) {
+                fs.writeFile('./grao-config/edit.js.ejs', data,function(err, data) {
+                if (err) {
+                    throw err;
+                }
+                });
+            });
+
+            fs.readFile(__dirname+'/../templates/show.js.ejs', function(err, data) {
+                if (err) {
+                throw err;
+                }
+                fs.writeFile('./grao-config/show.js.ejs', data,function(err, data) {
                 if (err) {
                     throw err;
                 }

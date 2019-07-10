@@ -1,0 +1,5 @@
+@if($<%= props.name _%>)
+<%_ for (var prop in props.resultsQuery ) { _%>
+    <%= props.resultsQuery[prop].Field _%> : {{ $<%= props.name _%>-><%= props.resultsQuery[prop].Field _%> }} <br />
+<%_ } _%>
+@endif

@@ -1,5 +1,5 @@
 
-<a href="{{ route('<%= props.space _%>.<%= props.name _%>.form') }}">Cadastrar</a>
+<a href="{{ route('<%= props.space _%>.<%= props.name _%>.create') }}">Cadastrar</a>
 <table>
     <thead>
     <%_ for (var prop in props.resultsQuery ) { _%>
@@ -15,8 +15,9 @@
             <td>{{ $<%= props.name _%>-><%= props.resultsQuery[prop].Field _%> }}</td>
             <%_ } _%>
             <td>
-                <a href="{{ route('<%= props.space _%>.<%= props.name _%>.form', $<%= props.name _%>->id _%>) }}">Alterar</a>
-                <a href="{{ route('<%= props.space _%>.<%= props.name _%>.destroy', $<%= props.name _%>->id _%>) }}">Excluir</a>
+                <a href="{{ route('<%= props.space _%>.<%= props.name _%>.show', $<%= props.name _%>->id _%>) }}">Show</a>
+                <a href="{{ route('<%= props.space _%>.<%= props.name _%>.edit', $<%= props.name _%>->id _%>) }}">Update</a>
+                <a href="{{ route('<%= props.space _%>.<%= props.name _%>.destroy', $<%= props.name _%>->id _%>) }}">Delete</a>
             </td>
         </tr>
         @endforeach
