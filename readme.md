@@ -29,6 +29,7 @@ $ npm i -g grao-laravel-crud
 
 ----------------------------------------------------
 
+
 # Usage (CLI) Generate
 
 ----------------------------------------------------
@@ -188,6 +189,16 @@ $ grao migrate --rollback
 | `rollback` | Command to return |
 | `update` | Command to update the table |
 
+
+----------------------------------------------------
+
+# Donations to always improve the project, thank you. =) !
+
+----------------------------------------------------
+
+  - PayPal: sueltonlima@gmail.com
+
+----------------------------------------------------
 
 # License
 
