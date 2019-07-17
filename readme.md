@@ -192,10 +192,10 @@ $ grao migrate --rollback
 
 ----------------------------------------------------
 
-# Donations to always improve the project, thank you. =) !
+# =)
 
 ----------------------------------------------------
-
+  - Donations to always improve the project, thank you.
   - PayPal: sueltonlima@gmail.com
 
 ----------------------------------------------------
